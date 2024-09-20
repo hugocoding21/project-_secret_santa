@@ -1,0 +1,35 @@
+
+POST http://localhost:3001/register
+Content-Type: application/json
+
+{
+    "email":"florent@gmail.com",
+    "password":"Froggys_",
+    "username": "Froggys_"
+}
+###
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+    "email":"florent@gmail.com",
+    "password":"lesPetitesSirenes"
+}
+###
+GET http://localhost:3001/users/66ed78d7bf62f90b1e33a86c
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+
+###
+PUT http://localhost:3001/users/66ed78d7bf62f90b1e33a86c
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+
+{
+    "username": "FroggysLeS",
+    "password": "lasalade"
+}
+###
+DELETE http://localhost:3001/users/66ed78d7bf62f90b1e33a86c
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
