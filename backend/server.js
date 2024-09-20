@@ -1,11 +1,5 @@
-const express = require("express");
-const app = express();
-const PORT = 5000;
+const app = require("./app")
 
-app.get("/", (req, res) => {
-  res.send("Hello from backend!");
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(app.get("port"), function(){
+    console.log("Serve is running at "+ app.get("host") + ":" + app.get("port"))
+})  
