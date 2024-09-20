@@ -1,0 +1,30 @@
+<h2>{{ formTitle }}</h2>
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="form-group" *ngFor="let key of objectKeys(formFields)">
+    <label [for]="key" class="form-label">{{ formFields[key].label }}</label>
+    <input
+      [id]="key"
+      [formControlName]="key"
+      [type]="formFields[key].type"
+      class="form-input"
+    />
+
+    <!-- Affichage des erreurs de validation -->
+    <div
+      *ngIf="
+        formGroup.get(key)?.invalid &&
+        (formGroup.get(key)?.touched || formGroup.get(key)?.dirty)
+      "
+      class="form-error"
+    >
+      <!-- Vérification des erreurs requises -->
+      <ng-container
+        *ngIf="formFields[key]['required'] && formGroup.get(key)?.errors?.['required']"
+      >
+        {{ formFields[key].label }} is required
+      </ng-container>
+      <!-- Ajoute ici d'autres messages d'erreur si nécessaire -->
+    </div>
+  </div>
+  <button type="submit" class="form-button">{{ submitButtonText }}</button>
+</form>
