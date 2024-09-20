@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("./src/routes/userRoute");
+const groupRoutes = require("./src/routes/GroupRoute");
 const corsMiddleware = require("./utils/corsUtils");
 
 require("dotenv").config();
@@ -22,5 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set("host", HOST);
 app.set("port", PORT);
 userRoutes(app);
+groupRoutes(app);
 
 module.exports = app;

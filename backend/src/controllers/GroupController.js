@@ -2,8 +2,15 @@ const Group = require("../models/GroupModel");
 
 exports.createGroup = async (req, res) => {
   try {
-    const { name, ownerId } = req.body;
-    const group = new Group({ name, ownerId });
+    const { name } = req.body;
+
+    const user_id = req.user.id;
+
+    if (!name || !user_id) {
+      return res.status(400).json({ error: "Group name and user ID are required." });
+    }
+
+    const group = new Group({ name, ownerId: user_id });
     await group.save();
     res.status(201).json(group);
   } catch (error) {
