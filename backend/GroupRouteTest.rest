@@ -1,0 +1,7 @@
+### Invite user to group
+POST http://localhost:3001/invite
+Content-Type: application/json
+{
+    "receiver":"hhanocq@gmail.com",
+    "groupeName":"test"
+}
