@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || "localhost";
 
 mongoose
@@ -24,10 +24,5 @@ app.set("host", HOST);
 app.set("port", PORT);
 userRoutes(app);
 groupRoutes(app);
-
-app.listen(PORT, function (err) {
-  if (err) console.log("Error in server setup");
-  console.log("Server listening on Port", PORT);
-});
 
 module.exports = app;
