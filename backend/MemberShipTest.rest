@@ -1,0 +1,36 @@
+###
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+    "email":"test2@test2.fr",
+    "password":"Azerty123."
+}
+
+###
+GET http://localhost:3001/groups/66c60dd813586c590d3f0987/members
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzYxMGU5NjJmNDE4Y2I4NDY3ZTY0MiIsImVtYWlsIjoidGVzdDJAdGVzdDIuZnIiLCJpYXQiOjE3MjY4NDYyMjQsImV4cCI6MTcyNjg4MjIyNH0.6OEumTvfpuN-dNCcfY2jxhJUo_t6q0JPXfJN48jjOHA
+Content-Type: application/json
+
+###
+POST http://localhost:3001/groups/:groupId/members
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzYwZGE3MTM1ODZjNTkwZDNmMDk4NCIsImVtYWlsIjoidGVzdEB0ZXN0LmZyIiwiaWF0IjoxNzI2ODQ1NzU5LCJleHAiOjE3MjY4ODE3NTl9.9ju50AVEFIR2lHRanq9Km1xHqPlYbk6kWmBM6GuuFjk
+Content-Type: application/json
+
+{
+    "userId": "user_id_to_add"
+}
+
+###
+PUT http://localhost:3001/groups/:groupId/members/:userId
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzYwZGE3MTM1ODZjNTkwZDNmMDk4NCIsImVtYWlsIjoidGVzdEB0ZXN0LmZyIiwiaWF0IjoxNzI2ODQ1NzU5LCJleHAiOjE3MjY4ODE3NTl9.9ju50AVEFIR2lHRanq9Km1xHqPlYbk6kWmBM6GuuFjk
+Content-Type: application/json
+
+{
+    "status": "new_status"  // e.g., "accepted", "pending", etc.
+}
+
+###
+DELETE http://localhost:3001/groups/:groupId/members/:userId
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzYwZGE3MTM1ODZjNTkwZDNmMDk4NCIsImVtYWlsIjoidGVzdEB0ZXN0LmZyIiwiaWF0IjoxNzI2ODQ1NzU5LCJleHAiOjE3MjY4ODE3NTl9.9ju50AVEFIR2lHRanq9Km1xHqPlYbk6kWmBM6GuuFjk
+Content-Type: application/json
