@@ -2,14 +2,16 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "3001:5000"
     depends_on:
       - mongo
     env_file:
       - ./backend/.env
     volumes:
       - ./backend/src:/app/src
+      - ./backend/utils:/app/utils
       - ./backend/app.js:/app/app.js
+      - ./backend/server.js:/app/server.js
       - ./backend/.env:/app/.env
       - ./backend/package.json:/app/package.json
       - ./backend/package-lock.json:/app/package-lock.json
