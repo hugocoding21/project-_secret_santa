@@ -18,19 +18,17 @@ export class FormComponent implements OnInit {
   @Input() submitButtonText: string = 'Submit';
   @Output() formSubmitted = new EventEmitter<any>();
 
-  formGroup: FormGroup = new FormGroup({});
+  @Input() formGroup!: FormGroup; 
 
   objectKeys = Object.keys;
 
   ngOnInit() {
-    for (const key of Object.keys(this.formFields)) {
-      const field = this.formFields[key];
-      const validators = field.required ? [Validators.required] : [];
-      this.formGroup.addControl(key, new FormControl('', validators));
-    }
+    
   }
 
   onSubmit() {
+    console.log(this.formGroup);
+    
     if (this.formGroup.valid) {
       this.formSubmitted.emit(this.formGroup.value);
     } else {

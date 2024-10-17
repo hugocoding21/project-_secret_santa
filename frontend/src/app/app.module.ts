@@ -7,10 +7,12 @@ import { SharedModule } from './shared/shared.module';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, RegisterComponent, LoginComponent, HomeComponent],
-  imports: [BrowserModule, AppRoutingModule, SharedModule],
+  imports: [HttpClientModule,BrowserModule, AppRoutingModule, SharedModule,BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
