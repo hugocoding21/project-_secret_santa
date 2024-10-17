@@ -1,8 +1,7 @@
 const cors = require('cors');
 
 const allowedOrigins = [
-    'http://localhost',
-    //'http://'
+    'http://localhost:4200',
 ];
 
 const corsOptions = {
