@@ -1,23 +1,30 @@
 @use "fonts" as f;
-@use "variables"as v;
+@use "variables" as v;
 @use 'sass:color';
 
 @layer globals {
 
-    :root{
+    :root {
         @each $name, $codeColor in v.$colors {
             --#{$name}:#{$codeColor};
-            --#{$name}-lighter:#{color.scale($codeColor, $lightness: 30%)};    
+            --#{$name}-lighter:#{color.scale($codeColor, $lightness: 30%)};
 
         }
+
         --font-size-default: 1rem;
     }
 
     body {
         font-family: f.$main-font;
+        padding: 0;
+        margin: 0;
     }
 
     img {
         max-width: 100%;
+    }
+
+    a {
+        text-decoration: none;
     }
 }

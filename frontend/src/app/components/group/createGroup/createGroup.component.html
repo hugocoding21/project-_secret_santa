@@ -1,0 +1,47 @@
+<form [formGroup]="secretSantaForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="groupName">Nom du groupe</label>
+    <input
+      id="groupName"
+      type="text"
+      formControlName="groupName"
+      placeholder="Entrez le nom du groupe"
+      class="form-control"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="santaDate">Date du Secret Santa</label>
+    <input
+      id="santaDate"
+      type="date"
+      formControlName="santaDate"
+      class="form-control"
+    />
+  </div>
+
+  <div formArrayName="emails">
+    <div
+      *ngFor="let email of emails.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <label for="email">Email du Santa {{ i + 1 }}</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Entrez l'email"
+        class="form-control"
+      />
+      <button type="button" (click)="removeEmail(i)">Supprimer</button>
+    </div>
+    <button type="button" (click)="addEmail()">Ajouter un email</button>
+  </div>
+
+  <button
+    type="submit"
+    pButton
+    label="Créer un groupe"
+    icon="pi pi-plus-circle"
+  ></button>
+</form>
