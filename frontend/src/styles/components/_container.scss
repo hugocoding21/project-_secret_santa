@@ -1,5 +1,6 @@
 @use "../partials/variables" as v;
 @use "../partials/mixin" as m;
+@use "../partials/functions" as f;
 
 
 @layer components {
@@ -17,8 +18,8 @@
 
   .auth-container{
     @include m.flexbox(column, wrap, center,center);
-    height: 500px;
-    width: 500px;
+    height: f.rem(500);
+    width: f.rem(500);
     margin:auto;
     app-form {
       width: 100%;
