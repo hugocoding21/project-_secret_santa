@@ -1,5 +1,5 @@
 const Membership = require("../models/membershipModel");
-const Group = require("../models/groupModel");
+const Group = require("../models/GroupModel");
 const User = require("../models/userModel");
 
 // Utility function to check if a group exists
