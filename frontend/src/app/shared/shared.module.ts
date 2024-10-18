@@ -7,9 +7,12 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [FormComponent],
   imports: [
+    FormsModule,
     CommonModule,
     ReactiveFormsModule,
     ButtonModule,
@@ -17,8 +20,10 @@ import { TagModule } from 'primeng/tag';
     DataViewModule,
     TagModule,
     RippleModule,
+    InputTextModule,
   ],
   exports: [
+    FormsModule,
     FormComponent,
     ReactiveFormsModule,
     ButtonModule,
@@ -26,6 +31,7 @@ import { TagModule } from 'primeng/tag';
     DataViewModule,
     TagModule,
     RippleModule,
+    InputTextModule,
   ],
 })
 export class SharedModule {}

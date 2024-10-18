@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api-service';
 import { TokenStorageService } from './token-storage.service';
+import { Group } from 'src/models/api/group/groups.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,27 @@ export class GroupHttpClientService extends ApiService {
     super(http);
   }
 
-  getGroups(): Observable<any> {
+  getAllGroups(): Observable<any> {
     return this.get('groups');
+  }
+
+  geOwnerGroup(): Observable<any> {
+    return this.get('groups/owner');
+  }
+
+  getUserGroup(): Observable<any> {
+    return this.get('groups/member');
+  }
+
+  createGroup(body: any): Observable<any> {
+    return this.post('groups', body);
+  }
+
+  updateGroup(body: Group): Observable<any> {
+    return this.put('groups', body);
+  }
+
+  sendEmailInvitation(body: any): Observable<any> {
+    return this.post('invite', body);
   }
 }
