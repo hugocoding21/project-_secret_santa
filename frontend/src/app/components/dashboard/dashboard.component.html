@@ -1,0 +1,46 @@
+<div class="flex flex-column w-10 mx-auto">
+  <div class="flex justify-content-between align-items-center">
+    <h1 class="underline">Tableau de bord</h1>
+
+    <a href="/group/add" pButton pRipple="true" icon="pi pi-plus-circle" label="Créer un groupe"></a>
+  </div>
+  <p-card header="Mes groupes" class="flex">
+    <p-dataView [value]="secretSantas" layout="list" class="w-full">
+      <ng-template pTemplate="list" let-item>
+        <div class="grid">
+          <div class="col-12" *ngFor="let santa of secretSantas; let first = first">
+            <div class="flex flex-column sm:flex-row sm:align-items-center p-1 gap-4"
+              [ngClass]="{ 'border-top-1 surface-border': !first }">
+              <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4">
+                <div class="flex md:align-items-end gap-5">
+                  <p-tag [value]="isSantaInProgress(santa.santaDate) ? 'en cours' : 'terminé'"
+                    [severity]="isSantaInProgress(santa.santaDate) ? 'success' : 'danger'">
+                  </p-tag>
+
+
+                </div>
+
+                <div class="flex md:align-items-end gap-5">
+                  {{ santa.name }}
+                </div>
+                <div class="flex align-items-center">
+                  <span class="pi pi-gift"></span>
+                  <span class="ml-2">Santa: {{ santa.santaAssigned }}</span>
+                </div>
+                <div class="flex align-items-center">
+                  <span class="pi pi-calendar-times"></span>
+                  <span class="ml-2">Date du Santa:
+                    {{ santa.santaDate | date : "dd/MM/yyyy" }}</span>
+                </div>
+                <div class="flex align-items-center">
+                  <span class="pi pi-users"></span>
+                  <span class="ml-2">Nombre de membres: {{ santa.members }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </p-card>
+</div>

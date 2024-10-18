@@ -1,11 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const groupRoutes = require("./src/routes/GroupRoute");
-const userRoutes = require('./src/routes/userRoute');
-const corsMiddleware = require('./utils/corsUtils'); 
-const membershipRoutes = require('./src/routes/membershipRoute');
-
-
+const userRoutes = require("./src/routes/userRoute");
+const corsMiddleware = require("./utils/corsUtils");
+const membershipRoutes = require("./src/routes/membershipRoute");
 
 require("dotenv").config();
 
@@ -26,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("host", HOST);
 app.set("port", PORT);
 userRoutes(app);
-groupRoutes(app);membershipRoutes(app);
-
+groupRoutes(app);
+membershipRoutes(app);
 
 module.exports = app;
