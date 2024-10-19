@@ -3,7 +3,7 @@
   <h1 class="text-center text-3xl font-bold underline mb-5">Modifier le groupe : {{ groupData?.name }}</h1>
 
   <!-- Group details card -->
-  <p-card header="Détails du groupe" class="flex flex-column justify-content-center p-3 mb-5 shadow-2">
+  <p-card header="Détails du groupe" class="flex flex-column justify-content-center p-3 mb-5 ">
     <form [formGroup]="groupForm" class="w-full">
       <div class="grid formgrid">
         <div class="field col-12 md:col-6">
@@ -18,15 +18,18 @@
         </div>
       </div>
 
-      <div class="flex justify-content-end mt-4">
+      <div class="flex justify-content-center mt-4 gap-3">
+        <button pButton pRipple="true" label="Supprimer le groupe" icon="pi pi-trash"
+          class="p-button-danger p-button-lg" (click)="deleteGroup()"></button>
         <button pButton pRipple="true" label="Sauvegarder" icon="pi pi-save" class="p-button-success p-button-lg"
           (click)="updateGroup()"></button>
       </div>
     </form>
+
   </p-card>
 
   <!-- Group members card -->
-  <p-card header="Membres du groupe" class="flex flex-column justify-content-center p-3 shadow-2">
+  <p-card header="Membres du groupe" class="flex flex-column justify-content-center p-3 ">
     <ul class="list-none p-0">
       <li *ngFor="let member of groupMembers"
         class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1">

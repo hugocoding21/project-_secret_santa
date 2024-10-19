@@ -98,4 +98,22 @@ export class UpdateGroupComponent implements OnInit {
         }
       );
   }
+
+  deleteGroup(): void {
+    if (
+      confirm(
+        'Êtes-vous sûr de vouloir supprimer ce groupe ? Cette action est irréversible.'
+      )
+    ) {
+      this.groupHttpClientService.deleteGroup(this.groupId).subscribe(
+        (response: Response) => {
+          console.log('Group deleted successfully', response);
+          this.router.navigate(['/dashboard']);
+        },
+        (error: Error) => {
+          console.error('Error deleting group', error);
+        }
+      );
+    }
+  }
 }

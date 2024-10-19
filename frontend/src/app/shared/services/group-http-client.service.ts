@@ -40,4 +40,8 @@ export class GroupHttpClientService extends ApiService {
   sendEmailInvitation(body: any): Observable<any> {
     return this.post('invite', body);
   }
+
+  deleteGroup(id: string): Observable<any> {
+    return this.delete(`groups/${id}`);
+  }
 }
