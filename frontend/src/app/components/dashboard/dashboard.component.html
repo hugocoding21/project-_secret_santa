@@ -12,29 +12,32 @@
             <div class="flex flex-column sm:flex-row sm:align-items-center p-1 gap-4"
               [ngClass]="{ 'border-top-1 surface-border': !first }">
               <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4">
+                <!-- Informations du groupe -->
                 <div class="flex md:align-items-end gap-5">
                   <p-tag [value]="isSantaInProgress(santa.santaDate) ? 'en cours' : 'terminé'"
                     [severity]="isSantaInProgress(santa.santaDate) ? 'success' : 'danger'">
                   </p-tag>
                 </div>
-
                 <div class="flex md:align-items-end gap-5">
                   <span class="font-bold">{{ santa.name }}</span>
                 </div>
-
                 <div class="flex align-items-center">
                   <span class="pi pi-gift"></span>
                   <span class="ml-2">Santa: {{ santa.santaAssigned }}</span>
                 </div>
-
                 <div class="flex align-items-center">
                   <span class="pi pi-calendar-times"></span>
                   <span class="ml-2">Date du Santa: {{ santa.santaDate | date: 'dd/MM/yyyy' }}</span>
                 </div>
-
                 <div class="flex align-items-center">
                   <span class="pi pi-users"></span>
                   <span class="ml-2">Nombre de membres: {{ santa.members }}</span>
+                </div>
+                <!-- Bouton Modifier -->
+                <div class="flex align-items-center">
+                  <button pButton pRipple="true" label="Modifier / Ajouter membre" icon="pi pi-pencil"
+                    (click)="editGroup(santa._id)">
+                  </button>
                 </div>
               </div>
             </div>

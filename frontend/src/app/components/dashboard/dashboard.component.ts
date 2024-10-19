@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/models/api/group/groups.model';
 import { MembershipHttpClientService } from 'src/app/shared/services/Membership-http-client.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private titleService: Title,
+    private router: Router,
     private groupHttpClientService: GroupHttpClientService,
     private membershipHttpClientService: MembershipHttpClientService
   ) {}
@@ -52,5 +54,9 @@ export class DashboardComponent implements OnInit {
         console.error('Erreur lors de la récupération des groupes', error);
       }
     );
+  }
+
+  editGroup(groupId: string): void {
+    this.router.navigate(['/group/edit', groupId]);
   }
 }

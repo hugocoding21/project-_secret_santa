@@ -45,9 +45,9 @@ exports.getAllGroups = async (req, res) => {
 };
 
 /**
- * Get groups created
- * @route GET /groups/owned
- * @description Retrieves a list of all groups
+ * Get groups created by user
+ * @route GET /groups/owner
+ *
  * @param {Object} req - HTTP request
  * @param {Object} res - HTTP response returning the groups or an error
  * @returns {JSON} 200 with the list of groups, otherwise 500 or an error

@@ -29,8 +29,12 @@ export class GroupHttpClientService extends ApiService {
     return this.post('groups', body);
   }
 
-  updateGroup(body: Group): Observable<any> {
-    return this.put('groups', body);
+  getGroupById(id: string): Observable<any> {
+    return this.get(`groups/${id}`);
+  }
+
+  updateGroup(id: string, body: Group): Observable<any> {
+    return this.put(`groups/${id}`, body);
   }
 
   sendEmailInvitation(body: any): Observable<any> {

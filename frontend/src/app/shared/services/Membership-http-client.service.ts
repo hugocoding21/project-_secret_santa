@@ -16,4 +16,8 @@ export class MembershipHttpClientService extends ApiService {
   getMembersOfGroup(id: string): Observable<any> {
     return this.get(`groups/${id}/members`);
   }
+
+  removeMemberOGroup(idGroup: string, idUser: string): Observable<any> {
+    return this.delete(`groups/${idGroup}/members/${idUser}`);
+  }
 }
