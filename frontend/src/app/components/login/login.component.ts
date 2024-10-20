@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit{
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
   }
   onSubmit(formData: any) {
     if (this.formGroup.valid) {
