@@ -6,6 +6,7 @@ import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { createGroupComponent } from './components/group/createGroup/createGroup.component';
 import { AddMemberComponent } from './components/group/addMember/add-member/add-member.component';
+import { UpdateGroupComponent } from './components/group/updateGroup/update-group/update-group.component';
 import { ProfilComponent } from './profil/profil.component';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'group/add', component: createGroupComponent },
       { path: 'group/add-member', component: AddMemberComponent },
+      { path: 'group/edit/:id', component: UpdateGroupComponent },
     ]
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' }, // Redirige toute autre route vers home

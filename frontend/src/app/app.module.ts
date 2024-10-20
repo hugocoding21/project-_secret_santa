@@ -10,12 +10,12 @@ import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { createGroupComponent } from './components/group/createGroup/createGroup.component';
 import { SharedModule } from './shared/shared.module';
-import { AuthInterceptor } from './shared/services/auth-interceptor.service';
 import { AddMemberComponent } from './components/group/addMember/add-member/add-member.component';
 import { ProfilComponent } from './profil/profil.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { UpdateGroupComponent } from './components/group/updateGroup/update-group/update-group.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +26,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     DashboardComponent,
     createGroupComponent,
     AddMemberComponent,
+    UpdateGroupComponent,
     ProfilComponent
   ],
   imports: [
