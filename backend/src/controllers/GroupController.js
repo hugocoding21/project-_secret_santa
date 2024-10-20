@@ -15,6 +15,7 @@ exports.createGroup = async (req, res) => {
 
     const user_id = req.user.id;
 
+
     if (!name || !santaDate || !user_id) {
       return res.status(400).json({ error: "Group name, santaDate and user ID are required." });
     }
@@ -22,6 +23,7 @@ exports.createGroup = async (req, res) => {
     const group = new Group({ name, santaDate, ownerId: user_id });
     await group.save();
     res.status(201).json(group);
+
   } catch (error) {
     res.status(400).json({ message: "Error creating group", error });
   }

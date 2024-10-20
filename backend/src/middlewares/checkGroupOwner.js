@@ -7,7 +7,7 @@ exports.checkGroupOwner = async (req, res, next) => {
 
     const group = await Group.findById(groupId);
     if (!group) {
-      return res.status(404).json({ message: "Groupe non trouvé" });
+      return res.status(404).json({ message: "Group not found" });
     }
 
     if (group.ownerId.toString() !== userId) {
