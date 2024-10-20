@@ -5,6 +5,9 @@ interface FormField {
   label: string;
   type: string;
   required?: boolean;
+  errors?: string;
+  minlength?: number;
+  maxlength?: number;
 }
 
 @Component({
@@ -27,8 +30,6 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.formGroup);
-    
     if (this.formGroup.valid) {
       this.formSubmitted.emit(this.formGroup.value);
     } else {

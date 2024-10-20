@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   formFields = {
     username: { label: 'Username', type: 'text', required: true },
     email: { label: 'Email', type: 'email', required: true },
-    password: { label: 'Password', type: 'password', required: true },
+    password: { label: 'Password', type: 'password', required: true, minlength:6 },
   };
   error: any = { bool: false, message: ''};
 

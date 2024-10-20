@@ -15,6 +15,11 @@
 
         font-weight: bold;
     }
+    .form-success {
+        color: var(--green);
+        font-size: var(--font-size-default);
+        font-weight: bold;
+    }
 
     .form-group {
         display: flex;
