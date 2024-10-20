@@ -11,12 +11,11 @@ until your web app clears the data
 */
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenStorageService {
-
   constructor() {}
-  
+
   clear(): void {
     window.localStorage.clear();
   }
@@ -32,7 +31,7 @@ export class TokenStorageService {
 
   public saveUser(user: any): void {
     window.localStorage.removeItem(USER_KEY);
-    
+
     // clean access from DB
     let cloneUser = JSON.parse(JSON.stringify(user));
     window.localStorage.setItem(USER_KEY, JSON.stringify(cloneUser));
@@ -51,5 +50,22 @@ export class TokenStorageService {
       }
     }
     return null;
+  }
+
+  public getToken(): any {
+    return localStorage.getItem(TOKEN_KEY) ?? '';
+  }
+
+  get(name: string) {
+    return localStorage.getItem(name);
+  }
+
+  set(name: string, value: string): void {
+    localStorage.setItem(name, value);
+  }
+
+  getUserId(): string | null {
+    const user = JSON.parse(localStorage.getItem('userId') || 'null');
+    return user ? user.id : null;
   }
 }

@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "3001:5000"
+      - "3001:3001"
     depends_on:
       - mongo
     env_file:
@@ -25,6 +25,8 @@ services:
       - "4200:4200"
     platform: linux/amd64
     volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/angular.json:/app/angular.json
       - ./frontend/src/app:/app/src/app
       - ./frontend/package.json:/app/package.json
       - ./frontend/package.lock.json:/app/package.lock.json

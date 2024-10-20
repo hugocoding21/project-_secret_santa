@@ -1,6 +1,6 @@
 const Group = require("../models/GroupModel");
 const sendInvitationEmail = require("../../utils/mailer");
-
+const Membership = require("../models/membershipModel");
 /**
  * Create a group
  * @route POST /groups
@@ -11,17 +11,19 @@ const sendInvitationEmail = require("../../utils/mailer");
  */
 exports.createGroup = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, santaDate } = req.body;
 
     const user_id = req.user.id;
 
-    if (!name || !user_id) {
-      return res.status(400).json({ error: "Group name and user ID are required." });
+
+    if (!name || !santaDate || !user_id) {
+      return res.status(400).json({ error: "Group name, santaDate and user ID are required." });
     }
 
-    const group = new Group({ name, ownerId: user_id });
+    const group = new Group({ name, santaDate, ownerId: user_id });
     await group.save();
     res.status(201).json(group);
+
   } catch (error) {
     res.status(400).json({ message: "Error creating group", error });
   }
@@ -35,9 +37,52 @@ exports.createGroup = async (req, res) => {
  * @param {Object} res - HTTP response returning the groups or an error
  * @returns {JSON} 200 with the list of groups, otherwise 500 or an error
  */
-exports.getGroups = async (req, res) => {
+exports.getAllGroups = async (req, res) => {
   try {
     const groups = await Group.find();
+    res.status(200).json(groups);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching groups", error });
+  }
+};
+
+/**
+ * Get groups created
+ * @route GET /groups/owned
+ * @description Retrieves a list of all groups
+ * @param {Object} req - HTTP request
+ * @param {Object} res - HTTP response returning the groups or an error
+ * @returns {JSON} 200 with the list of groups, otherwise 500 or an error
+ */
+exports.getOwnedGroups = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const groups = await Group.find({ ownerId: userId });
+    res.status(200).json(groups);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching groups", error });
+  }
+};
+
+/**
+ * Get groups where user is in
+ * @route GET /groups/member
+ * @description Retrieves a list of all groups
+ * @param {Object} req - HTTP request
+ * @param {Object} res - HTTP response returning the groups or an error
+ * @returns {JSON} 200 with the list of groups, otherwise 500 or an error
+ */
+exports.getGroups = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const memberships = await Membership.find({ userId: userId });
+
+    const groupIds = memberships.map((membership) => membership.groupId);
+
+    const groups = await Group.find({ _id: { $in: groupIds } });
+
     res.status(200).json(groups);
   } catch (error) {
     res.status(500).json({ message: "Error fetching groups", error });
@@ -99,6 +144,24 @@ exports.deleteGroup = async (req, res) => {
 };
 
 /**
+ * Delete group by ID
+ * @route DELETE /groups/:id
+ * @description Deletes a specific group by its ID
+ * @param {Object} req - HTTP request containing the group ID in req.params.id
+ * @param {Object} res - HTTP response with status 204 if deleted successfully, otherwise 404 or an error
+ * @returns {Void} Sends a 204 status if successful, otherwise 404 or an error
+ */
+exports.deleteGroup = async (req, res) => {
+  try {
+    const group = await Group.findByIdAndDelete(req.params.id);
+    if (!group) return res.status(404).json({ message: "Group not found" });
+    res.status(204).send({ message: "Deleted !" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting group", error });
+  }
+};
+
+/**
  * Send invitation via email
  * @route POST /groups/invite
  * @description Sends an invitation email to a specified receiver
@@ -107,9 +170,12 @@ exports.deleteGroup = async (req, res) => {
  * @returns {JSON} 200 if email sent successfully, otherwise 500 or an error
  */
 exports.invite = async (req, res) => {
-  const { receiver, groupeName } = req.body;
+  const { receivers, groupName } = req.body;
+  console.log(receivers);
+
   try {
-    await sendInvitationEmail(receiver, groupeName);
+    const emailPromises = receivers.map((receiver) => sendInvitationEmail(receiver, groupName));
+    await Promise.all(emailPromises);
     res.status(200).json({ message: "Invitation email sent successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error sending invitation email", error });

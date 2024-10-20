@@ -6,6 +6,10 @@ const GroupSchema = new Schema({
     type: String,
     required: true,
   },
+  santaDate: {
+    type: Date,
+    required: true,
+  },
   ownerId: {
     type: Schema.Types.ObjectId,
     ref: "User",

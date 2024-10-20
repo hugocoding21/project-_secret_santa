@@ -1,11 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const groupRoutes = require("./src/routes/GroupRoute");
-const userRoutes = require('./src/routes/userRoute');
-const corsMiddleware = require('./utils/corsUtils'); 
-const membershipRoutes = require('./src/routes/membershipRoute');
-
-
+const userRoutes = require("./src/routes/userRoute");
+const corsMiddleware = require("./utils/corsUtils");
+const membershipRoutes = require("./src/routes/membershipRoute");
 
 require("dotenv").config();
 
