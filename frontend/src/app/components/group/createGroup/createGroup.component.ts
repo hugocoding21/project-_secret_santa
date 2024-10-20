@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { GroupHttpClientService } from 'src/app/shared/services/group-http-client.service';
 
 @Component({
   selector: 'app-create-group-form',
@@ -8,39 +10,43 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 export class createGroupComponent {
   secretSantaForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private groupHttpClientService: GroupHttpClientService,
+    private router: Router
+  ) {
     this.secretSantaForm = this.fb.group({
-      groupName: ['', Validators.required],
+      name: ['', Validators.required],
       santaDate: ['', Validators.required],
-      emails: this.fb.array([this.createEmailField()]),
     });
   }
 
-  get emails(): FormArray {
-    return this.secretSantaForm.get('emails') as FormArray;
-  }
+  async onSubmit(): Promise<void> {
+    try {
+      if (this.secretSantaForm.valid) {
+        console.log(this.secretSantaForm);
 
-  createEmailField(): FormGroup {
-    return this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
-  }
-
-  addEmail(): void {
-    this.emails.push(this.createEmailField());
-  }
-
-  removeEmail(index: number): void {
-    if (this.emails.length > 1) {
-      this.emails.removeAt(index);
-    }
-  }
-
-  onSubmit(): void {
-    if (this.secretSantaForm.valid) {
-      console.log('Form Data:', this.secretSantaForm.value);
-    } else {
-      console.log('Formulaire invalide');
+        this.groupHttpClientService
+          .createGroup(this.secretSantaForm.value)
+          .subscribe({
+            next: (group) => {
+              console.log('Group created successfully', group);
+            },
+            error: (err) => {
+              console.error(
+                'Une erreur est survenue lors de la création du groupe',
+                err
+              );
+            },
+          });
+        this.router.navigate(['/group/add-member'], {
+          queryParams: { name: this.secretSantaForm.value.name },
+        });
+      } else {
+        console.log('Invalid form');
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 }

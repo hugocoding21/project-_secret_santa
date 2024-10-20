@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; // Remplir l'espace vertical
+  background-color: #f4f4f4; // Couleur de fond légère
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; // Couleur du texte
+}
+
+form {
+  background: #fff; // Couleur de fond du formulaire
+  padding: 20px; // Espacement interne
+  border-radius: 8px; // Coins arrondis
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // Ombre légère
+  width: 400px; // Largeur fixe pour le formulaire
+}
+
+div[formArrayName="emails"] {
+  margin-bottom: 15px; // Espacement entre les groupes d'emails
+}
+
+input {
+  margin-right: 10px; // Espacement entre le champ input et le bouton
+  flex-grow: 1; // Prendre tout l'espace disponible
+}
+
+button {
+  min-width: 40px; // Largeur minimale pour les boutons
+  height: 40px; // Hauteur des boutons
+}

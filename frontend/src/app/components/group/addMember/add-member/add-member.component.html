@@ -1,0 +1,15 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+  <h2>Ajouter des Membres au Groupe: {{groupName}}</h2>
+  <form [formGroup]="memberForm" (ngSubmit)="submit()">
+    <div formArrayName="emails" *ngFor="let emailGroup of emails.controls; let i = index" fxLayout="row"
+      fxLayoutAlign="start center">
+      <div [formGroupName]="i">
+        <input pInputText formControlName="email" placeholder="Adresse email" required />
+        <button type="button" pButton icon="pi pi-times" (click)="removeEmailField(i)" class="p-button-danger"></button>
+      </div>
+    </div>
+    <button type="button" pButton icon="pi pi-plus" label="Ajouter un Email" (click)="addEmailField()"></button>
+    <button type="submit" pButton label="Soumettre" class="p-button-success"
+      [disabled]="!memberForm.valid || emails.length === 0"></button>
+  </form>
+</div>
