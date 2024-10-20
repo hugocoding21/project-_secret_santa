@@ -26,7 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 app.set("host", HOST);
 app.set("port", PORT);
 userRoutes(app);
-groupRoutes(app);membershipRoutes(app);
+groupRoutes(app);
+membershipRoutes(app);
 
 
 module.exports = app;

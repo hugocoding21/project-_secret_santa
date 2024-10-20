@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); // Assure-toi que bcrypt est installé
+const Roles = require('../enum/roles.enum');
 
 const Schema = mongoose.Schema;
 
@@ -17,6 +18,11 @@ const userSchema = new Schema({
     password: { 
         type: String, 
         required: true 
+    },
+    roles: {
+        type: [String],
+        enum: Object.values(Roles),
+        default: Roles.USER 
     },
     createdAt: { 
         type: Date, 
