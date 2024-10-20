@@ -12,6 +12,7 @@ import { createGroupComponent } from './components/group/createGroup/createGroup
 import { SharedModule } from './shared/shared.module';
 import { AuthInterceptor } from './shared/services/auth-interceptor.service';
 import { AddMemberComponent } from './components/group/addMember/add-member/add-member.component';
+import { UpdateGroupComponent } from './components/group/updateGroup/update-group/update-group.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AddMemberComponent } from './components/group/addMember/add-member/add-
     DashboardComponent,
     createGroupComponent,
     AddMemberComponent,
+    UpdateGroupComponent,
   ],
   imports: [
     HttpClientModule,
