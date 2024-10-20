@@ -11,17 +11,13 @@ const sendInvitationEmail = require("../../utils/mailer");
  */
 exports.createGroup = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, santaDate } = req.body;
 
     const user_id = req.user.id;
 
-    if (!name || !user_id) {
-      return res.status(400).json({ error: "Group name and user ID are required." });
-    }
-
-    const group = new Group({ name, ownerId: user_id });
-    await group.save();
-    res.status(201).json(group);
+    const group = new Group({ name, santaDate, ownerId: user_id });
+    const newGroup = await group.save();
+    res.status(201).json(newGroup);
   } catch (error) {
     res.status(400).json({ message: "Error creating group", error });
   }

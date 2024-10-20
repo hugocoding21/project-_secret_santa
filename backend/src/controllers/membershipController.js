@@ -98,8 +98,8 @@ exports.updateMemberStatus = async (req, res) => {
     membership.isAccepted = isAccepted;
     membership.updatedAt = Date.now();
 
-    await membership.save();
-    res.status(200).json(membership);
+    const updatedMember = await new Membership({ membership }).save();
+    res.status(200).json(updatedMember);
   } catch (error) {
     res.status(500).json({ message: "Error updating member status", error });
   }
