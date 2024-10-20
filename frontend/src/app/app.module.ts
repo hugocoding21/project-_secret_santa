@@ -36,13 +36,7 @@ import { UpdateGroupComponent } from './components/group/updateGroup/update-grou
     AppRoutingModule,
     SharedModule,
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-  ],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}
