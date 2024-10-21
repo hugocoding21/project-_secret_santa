@@ -5,10 +5,11 @@ exports.authorizeRoles = (requiredRoles) => {
     if (!req.user) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
+    const userRoles = req.user.roles.map(role => Number(role)); 
 
-    if (!requiredRoles.includes(req.user.roles)) {
-      return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
-    }
+      if (!requiredRoles.some(requiredRole => userRoles.includes(requiredRole))) {
+        return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
+      }
 
     next();
   };

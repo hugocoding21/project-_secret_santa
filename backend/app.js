@@ -4,6 +4,7 @@ const groupRoutes = require("./src/routes/GroupRoute");
 const userRoutes = require("./src/routes/userRoute");
 const corsMiddleware = require("./utils/corsUtils");
 const membershipRoutes = require("./src/routes/membershipRoute");
+const updateUsers = require("./scripts/updateUsersScript");
 
 require("dotenv").config();
 
@@ -28,4 +29,7 @@ groupRoutes(app);
 membershipRoutes(app);
 
 
+mongoose.connection.once('open', () => {
+  updateUsers(); // Appelle le script
+});
 module.exports = app;
