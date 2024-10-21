@@ -56,7 +56,9 @@ describe("User API", () => {
       });
       expect(res.status).toBe(200);
       expect(res.body.token).toBeDefined();
-      expect(res.body.userId).toBeDefined();
+      expect(res.body.id).toBeDefined();
+      expect(res.body.name).toBe("testuser");
+      expect(res.body.email).toBe("testuser@example.com");
     });
 
     it("should not login with incorrect credentials", async () => {
@@ -71,7 +73,7 @@ describe("User API", () => {
 
   describe("GET /users/:user_id", () => {
     it("should retrieve user data successfully", async () => {
-      const res = await request(app).get(`/users/${this.body.userId}`).set("Authorization", `${this.body.token}`);
+      const res = await request(app).get(`/users/${this.body.id}`).set("Authorization", `${this.body.token}`);
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("email", "testuser@example.com");
