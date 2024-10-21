@@ -22,9 +22,9 @@ const routes: Routes = [
       { path: 'profile', component: ProfilComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'group/add', component: createGroupComponent },
-      { path: 'group/add-member', component: AddMemberComponent },
+      { path: 'group/add-member/:id', component: AddMemberComponent },
       { path: 'group/edit/:id', component: UpdateGroupComponent },
-    ]
+    ],
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' }, // Redirige toute autre route vers home
 ];

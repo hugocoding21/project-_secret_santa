@@ -20,8 +20,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private titleService: Title,
     private router: Router,
-    private groupHttpClientService: GroupHttpClientService,
-    private membershipHttpClientService: MembershipHttpClientService
+    private groupHttpClientService: GroupHttpClientService
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +43,8 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-  /* Recupere les groupe ou le user est membre */
+
+  /* Recupere les groupes où le user est membre */
   getUserGroup(): void {
     this.groupHttpClientService.getUserGroup().subscribe(
       (groups: Array<Group>) => {
@@ -58,5 +58,9 @@ export class DashboardComponent implements OnInit {
 
   editGroup(groupId: string): void {
     this.router.navigate(['/group/edit', groupId]);
+  }
+
+  addMembers(id: string): void {
+    this.router.navigate([`/group/add-member/${id}`]);
   }
 }

@@ -27,7 +27,7 @@ import { UpdateGroupComponent } from './components/group/updateGroup/update-grou
     createGroupComponent,
     AddMemberComponent,
     UpdateGroupComponent,
-    ProfilComponent
+    ProfilComponent,
   ],
   imports: [
     HttpClientModule,
@@ -38,11 +38,13 @@ import { UpdateGroupComponent } from './components/group/updateGroup/update-grou
     FormsModule,
     NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: JwtInterceptor,
-    multi: true
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
+  ],
 
   bootstrap: [AppComponent],
 })
