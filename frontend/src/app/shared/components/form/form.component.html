@@ -4,14 +4,44 @@
     <label [for]="key" class="form-label">{{ formFields[key].label }}</label>
     <input [id]="key" [formControlName]="key" [type]="formFields[key].type" class="form-input" />
 
-    <div *ngIf="
+    <!-- Gestion des erreurs -->
+    <div
+      *ngIf="
         formGroup.get(key)?.invalid &&
         (formGroup.get(key)?.touched || formGroup.get(key)?.dirty)
-      " class="form-error">
+      "
+      class="form-error"
+    >
       <ng-container *ngIf="formFields[key]['required'] && formGroup.get(key)?.errors?.['required']">
         {{ formFields[key].label }} is required
       </ng-container>
+
+      <!-- Gestion de l'erreur de longueur minimale -->
+      <ng-container *ngIf="formGroup.get(key)?.errors?.['minlength']">
+        {{ formFields[key].label }} must be at least {{ formFields[key].minlength }} characters long
+      </ng-container>
+
+      <!-- Gestion de l'erreur de longueur maximale -->
+      <ng-container *ngIf="formGroup.get(key)?.errors?.['maxlength']">
+        {{ formFields[key].label }} cannot be more than {{ formFields[key].maxlength }} characters long
+      </ng-container>
+
+      <!-- Gestion de l'erreur d'email non valide -->
+      <ng-container *ngIf="formGroup.get(key)?.errors?.['email']">
+        Please enter a valid {{ formFields[key].label }}
+      </ng-container>
+
+      <!-- Gestion de l'erreur de format pattern -->
+      <ng-container *ngIf="formGroup.get(key)?.errors?.['pattern']">
+        {{ formFields[key].label }} format is invalid
+      </ng-container>
+
+      <!-- Gestion de l'erreur de correspondance des mots de passe -->
+      <ng-container *ngIf="formFields[key].label === 'Confirm New Password' && formGroup.get(key)?.hasError('matching') && !formGroup.get(key)?.errors?.['required']">
+        Passwords do not match
+      </ng-container>
+      
     </div>
   </div>
-  <button type="submit" class="form-button">{{ submitButtonText }}</button>
+  <button type="submit" class="form-button" [disabled]="formGroup.invalid">{{ submitButtonText }}</button>
 </form>

@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth-service';
 
 @Component({
@@ -26,18 +26,20 @@ import { AuthService } from 'src/app/shared/services/auth-service';
     ]),
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   formGroup!: FormGroup;
   formFields = {
     email: { label: 'Email', type: 'email', required: true },
-    password: { label: 'Password', type: 'password', required: true },
+    password: { label: 'Password', type: 'password', required: true, minlength:6 },
   };
   error: any = { bool: false, message: '' };
+  returnUrl!: string;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -45,13 +47,16 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
   }
   onSubmit(formData: any) {
     if (this.formGroup.valid) {
       this.authService.login(this.formGroup.value).subscribe({
         next: (data) => {
           console.log('data-success',data);
-          this.router.navigate(['/home']);
+          console.log(this.returnUrl);
+          
+          this.router.navigateByUrl(this.returnUrl);
         },
         error: (error: any) => {
           console.log(error);

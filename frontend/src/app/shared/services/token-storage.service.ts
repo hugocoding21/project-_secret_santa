@@ -34,13 +34,22 @@ export class TokenStorageService {
 
     // clean access from DB
     let cloneUser = JSON.parse(JSON.stringify(user));
-    if (cloneUser.jwtToken) delete cloneUser.jwtToken;
-
     window.localStorage.setItem(USER_KEY, JSON.stringify(cloneUser));
   }
 
-  public getUser(): any {
-    return JSON.parse(localStorage.getItem(USER_KEY) ?? '');
+  getUser(): any {
+    const user = window.localStorage.getItem(USER_KEY);
+
+    // Ajout d'une vérification avant d'appeler JSON.parse
+    if (user) {
+      try {
+        return JSON.parse(user);
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+        return null;
+      }
+    }
+    return null;
   }
 
   public getToken(): any {

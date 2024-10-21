@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="auth-container">
   <app-form [formTitle]="'Login'" [formFields]="formFields" [formGroup]="formGroup" [submitButtonText]="'Login'"
     (formSubmitted)="onSubmit($event)"></app-form>
   <div class="form-error" *ngIf="error.bool" [@slideIn]>{{ error.message }}</div>

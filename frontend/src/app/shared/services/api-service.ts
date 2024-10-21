@@ -1,8 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../models/user';
 
 export class ApiService {
   protected readonly apiUrl = environment.baseApiUrl;
+  protected userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  public user: Observable<User | null> = this.userSubject.asObservable();
 
   constructor(protected http: HttpClient) {}
 
@@ -21,5 +25,13 @@ export class ApiService {
 
   protected delete<T>(endpoint: string) {
     return this.http.delete<T>(`${this.apiUrl}/${endpoint}`);
+  }
+
+  protected setUser(user: User | null): void {
+    this.userSubject.next(user);
+  }
+
+  public getUser(): User | null {
+    return this.userSubject.getValue();
   }
 }

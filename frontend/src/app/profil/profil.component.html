@@ -1,0 +1,39 @@
+<div class="container">
+  <ul class="tabs">
+    <li [class.active]="activeTab === 'personal'" (click)="selectTab('personal')">
+      Personal Info
+    </li>
+    <li [class.active]="activeTab === 'password'" (click)="selectTab('password')">
+      Change Password
+    </li>
+  </ul>
+  <div class="form-error" *ngIf="errorMessage" [@slideIn]>
+    {{ errorMessage }}
+  </div>
+  
+  <!-- Message de succès -->
+  <div class="form-success" *ngIf="successMessage" [@slideIn]>
+    {{ successMessage }}
+  </div>
+  
+
+  <div *ngIf="activeTab === 'personal'">
+    <app-form
+      [formTitle]="'Personal Info'"
+      [formFields]="personalFormFields"
+      [formGroup]="personalForm"
+      [submitButtonText]="'Update Personal Info'"
+      (formSubmitted)="updatePersonalData($event)"
+    ></app-form>
+  </div>
+
+  <div *ngIf="activeTab === 'password'">
+    <app-form
+      [formTitle]="'Change Password'"
+      [formFields]="passwordFormFields"
+      [formGroup]="passwordForm"
+      [submitButtonText]="'Change Password'"
+      (formSubmitted)="changePassword($event)"
+    ></app-form>
+  </div>
+</div>
