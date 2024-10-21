@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon --legacy-watch server.js",
-    "test": "NODE_ENV=test jest",
+    "test": "jest",
     "docs": "jsdoc -c jsdoc.json -r src"
   },
   "keywords": [],

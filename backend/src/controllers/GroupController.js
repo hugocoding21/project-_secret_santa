@@ -15,15 +15,9 @@ exports.createGroup = async (req, res) => {
 
     const user_id = req.user.id;
 
-
-    if (!name || !santaDate || !user_id) {
-      return res.status(400).json({ error: "Group name, santaDate and user ID are required." });
-    }
-
     const group = new Group({ name, santaDate, ownerId: user_id });
-    await group.save();
-    res.status(201).json(group);
-
+    const newGroup = await group.save();
+    res.status(201).json(newGroup);
   } catch (error) {
     res.status(400).json({ message: "Error creating group", error });
   }
@@ -138,24 +132,6 @@ exports.deleteGroup = async (req, res) => {
     const group = await Group.findByIdAndDelete(req.params.id);
     if (!group) return res.status(404).json({ message: "Group not found" });
     res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting group", error });
-  }
-};
-
-/**
- * Delete group by ID
- * @route DELETE /groups/:id
- * @description Deletes a specific group by its ID
- * @param {Object} req - HTTP request containing the group ID in req.params.id
- * @param {Object} res - HTTP response with status 204 if deleted successfully, otherwise 404 or an error
- * @returns {Void} Sends a 204 status if successful, otherwise 404 or an error
- */
-exports.deleteGroup = async (req, res) => {
-  try {
-    const group = await Group.findByIdAndDelete(req.params.id);
-    if (!group) return res.status(404).json({ message: "Group not found" });
-    res.status(204).send({ message: "Deleted !" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting group", error });
   }
