@@ -7,12 +7,7 @@ module.exports = (server) => {
   server
     .route("/groups/:groupId/members")
     .get(verifyToken, membershipController.getGroupMembers)
-    .post(
-      verifyToken,
-      validateMembership,
-      checkGroupOwner,
-      membershipController.addMember
-    );
+    .post(verifyToken, validateMembership, checkGroupOwner, membershipController.addMembers);
 
   server
     .route("/groups/:groupId/members/:userId")

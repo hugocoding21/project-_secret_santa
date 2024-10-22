@@ -10,6 +10,19 @@ import { GroupHttpClientService } from 'src/app/shared/services/group-http-clien
 export class createGroupComponent {
   secretSantaForm: FormGroup;
 
+  formFields = {
+    name: {
+      label: 'Nom du groupe',
+      type: 'text',
+      required: true,
+    },
+    santaDate: {
+      label: 'Date du Secret Santa',
+      type: 'date',
+      required: true,
+    },
+  };
+
   constructor(
     private fb: FormBuilder,
     private groupHttpClientService: GroupHttpClientService,
@@ -21,26 +34,20 @@ export class createGroupComponent {
     });
   }
 
-  async onSubmit(): Promise<void> {
+  async onSubmit(formData: any): Promise<void> {
     try {
       if (this.secretSantaForm.valid) {
-        console.log(this.secretSantaForm);
-
-        this.groupHttpClientService
-          .createGroup(this.secretSantaForm.value)
-          .subscribe({
-            next: (group) => {
-              console.log('Group created successfully', group);
-            },
-            error: (err) => {
-              console.error(
-                'Une erreur est survenue lors de la création du groupe',
-                err
-              );
-            },
-          });
-        this.router.navigate(['/group/add-member'], {
-          queryParams: { name: this.secretSantaForm.value.name },
+        this.groupHttpClientService.createGroup(formData).subscribe({
+          next: (group) => {
+            console.log('Group created successfully', group);
+            this.router.navigate([`/group/add-member/${group._id}`]);
+          },
+          error: (err) => {
+            console.error(
+              'Une erreur est survenue lors de la création du groupe',
+              err
+            );
+          },
         });
       } else {
         console.log('Invalid form');

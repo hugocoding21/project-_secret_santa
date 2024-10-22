@@ -166,7 +166,6 @@ exports.deleteGroup = async (req, res) => {
  */
 exports.invite = async (req, res) => {
   const { receivers, groupName } = req.body;
-  console.log(receivers);
 
   try {
     const emailPromises = receivers.map((receiver) => sendInvitationEmail(receiver, groupName));
