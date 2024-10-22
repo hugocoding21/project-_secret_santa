@@ -14,6 +14,7 @@ export class UpdateGroupComponent implements OnInit {
   groupId: string = '';
   groupData: any;
   groupMembers: any;
+  pendingInvitations: any[] = [];
   groupForm: FormGroup;
 
   constructor(
@@ -76,6 +77,10 @@ export class UpdateGroupComponent implements OnInit {
     this.membershipHttpClientService.getMembersOfGroup(this.groupId).subscribe(
       (data) => {
         this.groupMembers = data;
+
+        this.pendingInvitations = data.filter(
+          (invitation: any) => invitation.invitedMail
+        );
       },
       (error) => {
         console.error('Error loading group data', error);
@@ -85,16 +90,34 @@ export class UpdateGroupComponent implements OnInit {
 
   removeMember(memberId: string): void {
     this.membershipHttpClientService
-      .removeMemberOGroup(this.groupId, memberId)
+      .removeMember(this.groupId, memberId)
       .subscribe(
         (response) => {
           console.log('Member removed successfully', response);
           this.groupMembers = this.groupMembers.filter(
-            (member: any) => member.userId._id !== memberId
+            (member: any) => member?.userId._id !== memberId
           );
         },
         (error) => {
           console.error('Error removing member', error);
+        }
+      );
+  }
+
+  removeInvite(invitedMail: string): void {
+    this.membershipHttpClientService
+      .removeMember(this.groupId, invitedMail)
+      .subscribe(
+        () => {
+          this.pendingInvitations = this.pendingInvitations.filter(
+            (member: any) => member.invitedMail !== invitedMail
+          );
+        },
+        (error) => {
+          console.error('Error removing member:', error);
+          this.pendingInvitations = this.pendingInvitations.filter(
+            (member: any) => member.invitedMail !== invitedMail
+          );
         }
       );
   }
@@ -115,5 +138,13 @@ export class UpdateGroupComponent implements OnInit {
         }
       );
     }
+  }
+
+  getValidGroupMembers() {
+    return this.groupMembers?.filter((member: any) => member.userId) || [];
+  }
+
+  hasValidMembers(): boolean {
+    return this.getValidGroupMembers().length > 0;
   }
 }

@@ -14,7 +14,7 @@ const checkGroupExists = async (groupId) => {
  * @param {string} email - The email of the user to be added
  * @returns {Object} - The membership object or error message
  */
-exports.addMember = async (req, res) => {
+exports.addMembers = async (req, res) => {
   try {
     const { groupId } = req.params;
     const { email } = req.body;
@@ -24,29 +24,62 @@ exports.addMember = async (req, res) => {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const results = await Promise.all(
+      email.map(async (email) => {
+        const user = await User.findOne({ email });
+        if (user === null) {
+          const existingMembership = await Membership.findOne({
+            invitedMail: email,
+            groupId,
+          });
+
+          if (existingMembership) {
+            return { email, message: "User is already a member or invited" };
+          }
+
+          const membership = new Membership({
+            invitedMail: email,
+            groupId,
+            isAccepted: false,
+          });
+          await membership.save();
+          return { email, membership };
+        }
+
+        const existingMembership = await Membership.findOne({
+          userId: user._id,
+          groupId,
+        });
+        if (existingMembership) {
+          return { email: user.email, message: `${user.email}  deja invité. Veuillez supprimer la ligne.` };
+        }
+
+        const membership = new Membership({
+          userId: user._id,
+          groupId,
+          isAccepted: false,
+        });
+
+        await membership.save();
+        return { email: user.email, membership };
+      })
+    );
+
+    const errors = results.filter((result) => result.message);
+    if (errors.length > 0) {
+      return res.status(400).json({
+        message: "Some user are already members",
+        errors,
+      });
     }
 
-    const existingMembership = await Membership.findOne({
-      userId: user._id,
-      groupId,
+    return res.status(201).json({
+      message: "Members added successfully",
+      memberships: results.filter((result) => result.membership),
     });
-    if (existingMembership) {
-      return res.status(400).json({ message: "User is already a member or invited" });
-    }
-
-    const membership = new Membership({
-      userId: user._id,
-      groupId,
-      isAccepted: false,
-    });
-
-    await membership.save();
-    res.status(201).json({ message: "Invitation sent", membership });
   } catch (error) {
-    res.status(500).json({ message: "Error adding member", error });
+    console.log(error);
+    return res.status(500).json({ message: "Error adding members", error });
   }
 };
 
@@ -120,13 +153,16 @@ exports.removeMember = async (req, res) => {
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
+    const invitedEmail = await Membership.findOneAndDelete({ invitedMail: userId });
+
+    if (invitedEmail) {
+      return res.status(200).json({ message: "invite successfully removed" });
+    }
 
     const membership = await Membership.findOneAndDelete({ userId, groupId });
     if (!membership) {
-      return res.status(404).json({ message: "Member not found in this group" });
+      return res.status(200).json({ message: "Member successfully removed" });
     }
-
-    res.status(200).json({ message: "Member successfully removed" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting member from group", error });
   }

@@ -1,15 +1,27 @@
-<div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
-  <h2>Ajouter des Membres au Groupe: {{groupName}}</h2>
-  <form [formGroup]="memberForm" (ngSubmit)="submit()">
-    <div formArrayName="emails" *ngFor="let emailGroup of emails.controls; let i = index" fxLayout="row"
-      fxLayoutAlign="start center">
-      <div [formGroupName]="i">
-        <input pInputText formControlName="email" placeholder="Adresse email" required />
-        <button type="button" pButton icon="pi pi-times" (click)="removeEmailField(i)" class="p-button-danger"></button>
+<div class="flex flex-column">
+  <h2 class="text-center text-2xl">Ajouter des Membres au Groupe: {{ groupName }}</h2>
+  <div class=" flex flex-column w-4 m-auto">
+    <form [formGroup]="memberForm" (ngSubmit)="submit()">
+      <div class="w-full" formArrayName="emails" *ngFor="let emailGroup of emails.controls; let i = index">
+        <div [formGroupName]="i" class="flex items-center mb-2">
+          <input style="width: 80%;" pInputText formControlName="email" placeholder="Adresse email" required />
+          <button type="button" pButton icon="pi pi-times" (click)="removeEmailField(i)" class="p-button-danger ml-2"
+            style="width: 20%;"></button>
+        </div>
+        <div
+          *ngIf="emailGroup.get('email')?.invalid && (emailGroup.get('email')?.touched || emailGroup.get('email')?.dirty)"
+          class="error-message">
+          <span *ngIf="emailGroup.get('email')?.errors?.['required']">L'adresse email est requise.</span>
+          <span *ngIf="emailGroup.get('email')?.errors?.['email']">L'adresse email est invalide.</span>
+          <span *ngIf="emailGroup.get('email')?.errors?.['invalidEmail']">L'adresse email n'est pas valide.</span>
+        </div>
       </div>
-    </div>
-    <button type="button" pButton icon="pi pi-plus" label="Ajouter un Email" (click)="addEmailField()"></button>
-    <button type="submit" pButton label="Soumettre" class="p-button-success"
-      [disabled]="!memberForm.valid || emails.length === 0"></button>
-  </form>
+      <button type="button" pButton icon="pi pi-plus" label="Ajouter un Email" (click)="addEmailField()"></button>
+      <button type="submit" pButton label="Soumettre" class="p-button-success"
+        [disabled]="!memberForm.valid || emails.length === 0"></button>
+    </form>
+  </div>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
 </div>
