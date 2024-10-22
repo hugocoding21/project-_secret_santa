@@ -16,6 +16,7 @@ module.exports = (server) => {
 
   server
     .route("/groups/:groupId/members/:userId")
+    .get(verifyToken,validateMembership,membershipController.verifyIsMemberOrOwner)
     .put(
       verifyToken,
       validateMembership,

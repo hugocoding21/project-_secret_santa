@@ -5,6 +5,8 @@ const userRoutes = require("./src/routes/userRoute");
 const corsMiddleware = require("./utils/corsUtils");
 const membershipRoutes = require("./src/routes/membershipRoute");
 const updateUsers = require("./scripts/updateUsersScript");
+const secretSantaAssignmentRoutes = require("./src/routes/secretSantaAssignmentRoute");
+
 
 require("dotenv").config();
 
@@ -27,6 +29,7 @@ app.set("port", PORT);
 userRoutes(app);
 groupRoutes(app);
 membershipRoutes(app);
+secretSantaAssignmentRoutes(app);
 
 
 mongoose.connection.once('open', () => {
