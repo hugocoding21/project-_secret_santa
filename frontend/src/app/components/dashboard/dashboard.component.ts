@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle(this.title);
     this.getOwnedGroup();
+    this.getUserGroup();
   }
 
   isSantaInProgress(santaDate: string | Date): boolean {
