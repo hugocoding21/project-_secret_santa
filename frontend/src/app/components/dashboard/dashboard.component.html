@@ -12,14 +12,17 @@
             <div *ngFor="let santa of secretSantas; let first = first" class="col-12">
               <div class="flex flex-column sm:flex-row sm:align-items-center p-1 gap-4"
                 [ngClass]="{ 'border-top-1 surface-border': !first }">
-                <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4">
-                  <div class="flex md:align-items-end gap-5 flex-1">
+                <div class="flex flex-row justify-content-between flex-wrap md:align-items-center flex-1 gap-4">
+                  <!-- Informations du groupe -->
+                  <div class="flex md:align-items-end gap-5 w-4rem">
                     <p-tag [value]="isSantaInProgress(santa.santaDate) ? 'en cours' : 'terminé'"
                       [severity]="isSantaInProgress(santa.santaDate) ? 'success' : 'danger'">
                     </p-tag>
+                  </div>
+                  <div class="flex md:align-items-end gap-5 w-6rem max-w-6rem">
                     <span class="font-bold">{{ santa.name }}</span>
                   </div>
-                  <div class="flex align-items-center flex-1">
+                  <div class="flex align-items-center w-12rem max-w-12rem text-sm">
                     <span class="pi pi-gift"></span>
                     <ng-container *ngIf="santa.santaAssigned; else noSanta">
                       <button pButton pRipple="true" label="Supprimer" 
@@ -33,21 +36,19 @@
                         (click)="launchSanta(santa._id)">
                       </button>
                     </ng-template>
-                  </div>
-                  <div class="flex align-items-center flex-1">
+                  </div>                
+                  <div class="flex align-items-center">
                     <span class="pi pi-calendar-times"></span>
                     <span class="ml-2">Date du Santa: {{ santa.santaDate | date: 'dd/MM/yyyy' }}</span>
                   </div>
-                  <div class="flex align-items-center flex-1">
+                  <div class="flex align-items-center">
                     <span class="pi pi-users"></span>
-                    <span class="ml-2">Nombre de membres: {{ santa.members }}</span>
+                    <span class="ml-2">Membres: {{ santa.members }}</span>
                   </div>
-                  <div class="flex align-items-center gap-2">
-                    <button pButton pRipple="true" label="Modifier le groupe" icon="pi pi-pencil"
+                  <!-- Bouton Modifier -->
+                  <div class="flex align-items-center">
+                    <button pButton pRipple="true" label="Modifier / Ajouter membre" icon="pi pi-pencil"
                       (click)="editGroup(santa._id)">
-                    </button>
-                    <button pButton pRipple="true" label="Ajouter des membres" icon="pi pi-plus"
-                      (click)="addMembers(santa._id)">
                     </button>
                   </div>
                 </div>

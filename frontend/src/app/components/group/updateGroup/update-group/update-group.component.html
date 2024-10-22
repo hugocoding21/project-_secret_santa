@@ -30,11 +30,11 @@
   <!-- Membres du groupe -->
   <p-card header="Membres du groupe" class="flex flex-column justify-content-center p-3">
     <ul class="list-none p-0">
-      <li *ngFor="let member of getValidGroupMembers(); let i = index" >
-        <span class="text-lg font-semibold">{{ member?.userId.username }}</span>
+      <li *ngFor="let member of getValidGroupMembers(); let i = index" class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1 flex-wrap" >
+        <span class="text-lg font-semibold w-6rem max-w-6rem">{{ member?.userId.username }}</span>
         
         <!-- Association information -->
-        <div class="mt-2 flex align-items-center justify-content-between gap-3" *ngIf="santaAssigned">
+        <div class="mt-2 flex align-items-center justify-content-between gap-3 flex-wrap" *ngIf="santaAssigned">
           <button pButton pRipple="true" icon="pi pi-eye" class="p-button-sm"
             (click)="toggleAssociationVisibility(i)">
             <span class="ml-2">
@@ -42,7 +42,7 @@
             </span>
           </button>
 
-          <p class="text-lg ml-2">
+          <p class="text-lg ml-2 w-17rem">
             Offre un cadeau à : <span *ngIf="member.showAssociation">{{ member.associatedWith }}</span>
           </p>        
         </div>
