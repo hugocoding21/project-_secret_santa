@@ -27,12 +27,11 @@ export class GroupAccessGuard implements CanActivate {
 
     const user = this.authService.getUser();
 
-    // Vérifie si l'utilisateur fait partie du groupe
     return this.groupService.isUserOrOwnerInGroup(groupId, user?.id).pipe(
       map((response:any) => {
         console.log(response);
         
-        const isMember = response.isMember || response.isOwner; // Assurez-vous d'avoir cette logique dans votre service
+        const isMember = response.isMember || response.isOwner; 
         if (!isMember) {
           this.router.navigate(['/dashboard']); 
           return false;
@@ -42,7 +41,7 @@ export class GroupAccessGuard implements CanActivate {
       catchError((error) => {
         console.error('Error checking group membership:', error);
         this.router.navigate(['/dashboard']); 
-        return of(false); // Retourne false en cas d'erreur
+        return of(false); 
       })
     ).toPromise();
   }

@@ -10,7 +10,7 @@
     <div class="form-success" *ngIf="successMessage" [@slideIn]>
       {{ successMessage }}
     </div>
-    <p-card header="Mes groupes" class="flex w-full">
+    <p-card header="Mes groupes">
       <p-dataView [value]="secretSantas" layout="list">
         <ng-template pTemplate="list" let-item>
           <div class="grid">
@@ -72,7 +72,10 @@
             <div *ngFor="let group of userGroups; let first = first" class="col-12">
               <div class="flex flex-column sm:flex-row sm:align-items-center p-1 gap-4"
                 [ngClass]="{ 'border-top-1 surface-border': !first }">
-                <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4">
+                <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4" (click)="editGroup(group._id)">
+                  <div class="cursor-pointer">
+                    <span class="pi pi-eye"></span>
+                  </div>
                   <div class="flex md:align-items-end gap-5">
                     <p-tag [value]="isSantaInProgress(group.santaDate) ? 'en cours' : 'terminé'"
                       [severity]="isSantaInProgress(group.santaDate) ? 'success' : 'danger'">
@@ -83,7 +86,7 @@
                   </div>
                   <div class="flex align-items-center">
                     <span class="pi pi-gift"></span>
-                    <span class="ml-2">Santa: {{ group.santaAssigned }}</span>
+                    <span class="ml-2">Santa: {{ group.receiver?.username }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <span class="pi pi-calendar-times"></span>
@@ -91,7 +94,7 @@
                   </div>
                   <div class="flex align-items-center">
                     <span class="pi pi-users"></span>
-                    <span class="ml-2">Nombre de membres: {{ group.members }}</span>
+                    <span class="ml-2">Membres: {{ group.members }}</span>
                   </div>
                 </div>
               </div>

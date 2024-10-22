@@ -24,7 +24,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'group/add', component: createGroupComponent },
       { path: 'group/add-member/:id', component: AddMemberComponent },
-      { path: 'group/edit/:id', component: UpdateGroupComponent,canActivate: [GroupAccessGuard], },
+      { path: 'group/view/:id', component: UpdateGroupComponent,canActivate: [GroupAccessGuard], },
     ]
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' }, // Redirige toute autre route vers home

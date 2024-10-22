@@ -28,8 +28,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle(this.title);
-    this.getOwnedGroup();
-    this.getUserGroup();
+    this.getGroups(true); //owned groups
+    this.getGroups();
   }
 
   isSantaInProgress(santaDate: string | Date): boolean {
@@ -37,26 +37,15 @@ export class DashboardComponent implements OnInit {
   }
 
   /* Récupere les group créer par l'utilisateur */
-  getOwnedGroup(): void {
-    this.groupHttpClientService.geOwnerGroup().subscribe(
-      {
-        next: (data: any) => {
-          this.secretSantas = data;
-        },
-        error: (error) => {
-          console.error(error);
-          this.successMessage = null;
-          this.errorMessage = error.error.message;
-        },
-      }
-    );
-  }
-
-  /* Recupere les groupes où le user est membre */
-  getUserGroup(): void {
-    this.groupHttpClientService.getUserGroup().subscribe({
+  getGroups(owner: boolean = false): void {
+    this.groupHttpClientService.getGroups(owner).subscribe({
       next: (data: any) => {
-        this.userGroups = data;
+        if (owner) {
+          this.secretSantas = data;
+        } else {          
+          this.userGroups=data;
+        }
+        
       },
       error: (error) => {
         console.error(error);
@@ -67,7 +56,7 @@ export class DashboardComponent implements OnInit {
   }
 
   editGroup(groupId: string): void {
-    this.router.navigate(['/group/edit', groupId]);
+    this.router.navigate(['/group/view', groupId]);
   }
 
   addMembers(id: string): void {
@@ -77,16 +66,7 @@ export class DashboardComponent implements OnInit {
   deleteSanta(id: any) {
     this.groupHttpClientService.deleteSantaAssignement(id).subscribe({
       next: (data: any) => {
-        this.successMessage = data.message;
-        this.errorMessage = null;
-
-        if (this.successTimeout) {
-          clearTimeout(this.successTimeout);
-        }
-        this.successTimeout = setTimeout(() => {
-          this.successMessage = null;
-        }, 3000);
-        this.getOwnedGroup();
+        this.handleSuccess(data, true);
       },
       error: (error) => {
         console.error(error);
@@ -98,16 +78,7 @@ export class DashboardComponent implements OnInit {
   launchSanta(id: any) {
     this.groupHttpClientService.launchSecretSanta(id).subscribe({
       next: (data) => {
-        this.successMessage = data.message;
-        this.errorMessage = null;
-
-        if (this.successTimeout) {
-          clearTimeout(this.successTimeout);
-        }
-        this.successTimeout = setTimeout(() => {
-          this.successMessage = null;
-        }, 3000);
-        this.getOwnedGroup();
+        this.handleSuccess(data);
       },
       error: (error) => {
         console.error(error);
@@ -115,5 +86,18 @@ export class DashboardComponent implements OnInit {
         this.errorMessage = error.error.message;
       },
     });
+  }
+
+  handleSuccess(data: any, owned: boolean = false) {
+    this.successMessage = data.message;
+    this.errorMessage = null;
+
+    if (this.successTimeout) {
+      clearTimeout(this.successTimeout);
+    }
+    this.successTimeout = setTimeout(() => {
+      this.successMessage = null;
+    }, 3000);
+    this.getGroups(true);
   }
 }

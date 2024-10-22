@@ -90,8 +90,19 @@ exports.getGroups = async (req, res) => {
     const groupIds = memberships.map((membership) => membership.groupId);
 
     const groups = await Group.find({ _id: { $in: groupIds } });
-
-    res.status(200).json(groups);
+    const groupsWithMemberCount = await Promise.all(
+      groups.map(async (group) => {
+        const members = await Membership.countDocuments({ groupId: group._id });
+        const assignment = await secretSantaAssignmentModel.findOne({ groupId: group._id, giverId: userId }).populate('receiverId',"username email");
+        
+        return {
+          ...group.toObject(),
+          members,
+          receiver:assignment.receiverId
+        };
+      })
+    );
+    res.status(200).json(groupsWithMemberCount);
   } catch (error) {
     res.status(500).json({ message: "Error fetching groups", error });
   }

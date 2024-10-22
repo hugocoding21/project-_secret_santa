@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ApiService } from './api-service';
 import { TokenStorageService } from './token-storage.service';
 import { Group } from 'src/models/api/group/groups.model';
@@ -9,6 +9,9 @@ import { Group } from 'src/models/api/group/groups.model';
   providedIn: 'root',
 })
 export class GroupHttpClientService extends ApiService {
+  private isGroupOwnerSubject = new BehaviorSubject<boolean>(false);
+  isGroupOwner$ = this.isGroupOwnerSubject.asObservable();
+
   constructor(http: HttpClient, protected tokenStorage: TokenStorageService) {
     super(http);
   }
@@ -17,12 +20,9 @@ export class GroupHttpClientService extends ApiService {
     return this.get('groups');
   }
 
-  geOwnerGroup(): Observable<any> {
-    return this.get('groups/owner');
-  }
-
-  getUserGroup(): Observable<any> {
-    return this.get('groups/member');
+  getGroups(owner: boolean = false): Observable<any> {
+    const routeName = owner?"owner":"member";
+    return this.get(`groups/${routeName}`);
   }
 
   createGroup(body: any): Observable<any> {
@@ -52,7 +52,13 @@ export class GroupHttpClientService extends ApiService {
     return this.delete(`groups/${idGroup}/secret-santa`);
   }
   isUserOrOwnerInGroup(idGroup:string, idUser:string){
-    return this.get(`groups/${idGroup}/members/${idUser}`);
+    return this.get(`groups/${idGroup}/members/${idUser}`)
+    .pipe(
+      map((response:any) => {
+        this.isGroupOwnerSubject.next(response.isOwner);
+        return response;
+      })
+    );;
   }
 
   showAssociationByMembersId(idGroup:string, idUser:string){

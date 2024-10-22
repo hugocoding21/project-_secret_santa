@@ -19,6 +19,7 @@ export class UpdateGroupComponent extends AppController implements OnInit {
   pendingInvitations: any[] = [];
   groupForm: FormGroup;
   santaAssigned: boolean =false;
+  isGroupOwner: boolean = false;
 
   constructor(
     inject: Injector, authService: AuthService,
@@ -36,9 +37,14 @@ export class UpdateGroupComponent extends AppController implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.groupHttpClientService.isGroupOwner$.subscribe((isOwner) => {
+      this.isGroupOwner = isOwner;      
+    });
     this.groupId = this.route.snapshot.paramMap.get('id') || '';
     this.loadGroupData();
   }
+
   updateGroup(): void {
     if (this.groupForm.valid) {
       const updatedGroup: Group | any = {
