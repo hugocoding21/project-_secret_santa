@@ -15,7 +15,7 @@ export class ApiService {
     return this.http.get<T>(`${this.apiUrl}/${endpoint}`);
   }
 
-  protected post<T>(endpoint: string, data: any) {
+  protected post<T>(endpoint: string, data?: any) {
     return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data);
   }
 

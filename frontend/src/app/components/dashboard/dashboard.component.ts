@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
   userGroups: Array<Group> = [];
 
   currentDate: Date = new Date();
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+  private successTimeout: any;
 
   constructor(
     private titleService: Title,
@@ -36,27 +39,76 @@ export class DashboardComponent implements OnInit {
   /* Récupere les group créer par l'utilisateur */
   getOwnedGroup(): void {
     this.groupHttpClientService.geOwnerGroup().subscribe(
-      (groups: Array<Group>) => {
-        this.secretSantas = groups;
-      },
-      (error: Error) => {
-        console.error('Erreur lors de la récupération des groupes', error);
+      {
+        next: (data: any) => {
+          this.secretSantas = data;
+        },
+        error: (error) => {
+          console.error(error);
+          this.successMessage = null;
+          this.errorMessage = error.error.message;
+        },
       }
     );
   }
   /* Recupere les groupe ou le user est membre */
   getUserGroup(): void {
-    this.groupHttpClientService.getUserGroup().subscribe(
-      (groups: Array<Group>) => {
-        this.userGroups = groups;
+    this.groupHttpClientService.getUserGroup().subscribe({
+      next: (data: any) => {
+        this.userGroups = data;
       },
-      (error: Error) => {
-        console.error('Erreur lors de la récupération des groupes', error);
-      }
-    );
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
+      },
+    });
   }
 
   editGroup(groupId: string): void {
     this.router.navigate(['/group/edit', groupId]);
+  }
+
+  deleteSanta(id: any) {
+    this.groupHttpClientService.deleteSantaAssignement(id).subscribe({
+      next: (data: any) => {
+        this.successMessage = data.message;
+        this.errorMessage = null;
+
+        if (this.successTimeout) {
+          clearTimeout(this.successTimeout);
+        }
+        this.successTimeout = setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
+        this.getOwnedGroup();
+      },
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
+      },
+    });
+  }
+  launchSanta(id: any) {
+    this.groupHttpClientService.launchSecretSanta(id).subscribe({
+      next: (data) => {
+        this.successMessage = data.message;
+        this.errorMessage = null;
+
+        if (this.successTimeout) {
+          clearTimeout(this.successTimeout);
+        }
+        this.successTimeout = setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
+        this.getOwnedGroup();
+      },
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
+      },
+    });
   }
 }

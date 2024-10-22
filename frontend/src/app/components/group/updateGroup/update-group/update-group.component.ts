@@ -1,28 +1,33 @@
 import { MembershipHttpClientService } from './../../../../shared/services/Membership-http-client.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { GroupHttpClientService } from 'src/app/shared/services/group-http-client.service';
 import { Group } from 'src/models/api/group/groups.model';
+import { AppController } from '@app/app.controller';
+import { AuthService } from '@app/shared/services/auth-service';
 
 @Component({
   selector: 'app-update-group',
   templateUrl: './update-group.component.html',
   styleUrls: ['./update-group.component.scss'],
 })
-export class UpdateGroupComponent implements OnInit {
+export class UpdateGroupComponent extends AppController implements OnInit {
   groupId: string = '';
   groupData: any;
   groupMembers: any;
   groupForm: FormGroup;
+  santaAssigned: boolean =false;
 
   constructor(
+    inject: Injector, authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private groupHttpClientService: GroupHttpClientService,
-    private membershipHttpClientService: MembershipHttpClientService
+    private membershipHttpClientService: MembershipHttpClientService,
   ) {
+    super(inject, authService);
     this.groupForm = this.fb.group({
       name: ['', Validators.required],
       santaDate: ['', Validators.required],
@@ -59,6 +64,7 @@ export class UpdateGroupComponent implements OnInit {
   loadGroupData(): void {
     this.groupHttpClientService.getGroupById(this.groupId).subscribe(
       (data) => {
+        this.santaAssigned=data.santaAssigned;
         this.groupData = data;
         const formattedSantaDate = new Date(data.santaDate)
           .toISOString()
@@ -74,7 +80,7 @@ export class UpdateGroupComponent implements OnInit {
     );
 
     this.membershipHttpClientService.getMembersOfGroup(this.groupId).subscribe(
-      (data) => {
+      (data) => {        
         this.groupMembers = data;
       },
       (error) => {
@@ -115,5 +121,22 @@ export class UpdateGroupComponent implements OnInit {
         }
       );
     }
+  }
+
+  toggleAssociationVisibility(index: number): void {
+
+    const userId=this.groupMembers[index].userId._id;
+    this.groupHttpClientService.showAssociationByMembersId(this.groupId,userId).subscribe({
+      next: (data: any) => { 
+        if (data) {
+          this.groupMembers[index].showAssociation = !this.groupMembers[index].showAssociation;
+          this.groupMembers[index].associatedWith = data.username;
+        }       
+      },
+      error: (error) => {
+        console.error(error);
+        this.groupMembers[index].showAssociation=false;
+      }
+    });
   }
 }

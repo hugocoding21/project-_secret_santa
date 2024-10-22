@@ -29,6 +29,7 @@ export class ProfilComponent extends AppController implements OnInit {
   };
   successMessage: string | null = null;
   errorMessage: string | null = null; 
+  private successTimeout: any;
 
   constructor(inject: Injector, authService: AuthService, private fb: FormBuilder, private userService: UserService) {
     super(inject, authService);
@@ -90,11 +91,18 @@ export class ProfilComponent extends AppController implements OnInit {
     
     this.userService.updateUserProfile(updatedUser).subscribe({
       next: () => {
-        alert('Profile updated successfully');
+        this.successMessage = 'Password changed successfully.';
+        this.errorMessage = null;
+        if (this.successTimeout) {
+          clearTimeout(this.successTimeout);
+        }
+        this.successTimeout =  setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
       },
       error: (error) => {
-        console.error(error);
-        alert('Failed to update profile. Please try again.');
+        this.successMessage = null;
+        this.errorMessage = error;
       },
       complete: () => {
         console.log('Profile update process complete');
@@ -116,7 +124,7 @@ export class ProfilComponent extends AppController implements OnInit {
   
     this.userService.changePassword(this.user, passwordData).subscribe({
       next: (data) => {
-        console.log('data-success', data);
+        console.log('change-success');
     
         this.passwordForm.reset();
         this.successMessage = 'Password changed successfully.';

@@ -3,35 +3,53 @@
     <h1 class="underline">Tableau de bord</h1>
     <a href="/group/add" pButton pRipple="true" icon="pi pi-plus-circle" label="Créer un groupe"></a>
   </div>
-
+  <div class="form-error" *ngIf="errorMessage" [@slideIn]>
+    {{ errorMessage }}
+  </div>
+  
+  <!-- Message de succès -->
+  <div class="form-success" *ngIf="successMessage" [@slideIn]>
+    {{ successMessage }}
+  </div>
   <p-card header="Mes groupes" class="flex">
     <p-dataView [value]="secretSantas" layout="list" class="w-full">
       <ng-template pTemplate="list" let-item>
-        <div class="grid">
+        <div class="grid gap-3">
           <div class="col-12" *ngFor="let santa of secretSantas; let first = first">
-            <div class="flex flex-column sm:flex-row sm:align-items-center p-1 gap-4"
+            <div class="flex flex-column sm:flex-row sm:align-items-center sm:flex-wrap p-1 gap-4"
               [ngClass]="{ 'border-top-1 surface-border': !first }">
-              <div class="flex flex-row justify-content-between md:align-items-center flex-1 gap-4">
+              <div class="flex flex-row justify-content-between flex-wrap md:align-items-center flex-1 gap-4">
                 <!-- Informations du groupe -->
-                <div class="flex md:align-items-end gap-5">
+                <div class="flex md:align-items-end gap-5 w-4rem">
                   <p-tag [value]="isSantaInProgress(santa.santaDate) ? 'en cours' : 'terminé'"
                     [severity]="isSantaInProgress(santa.santaDate) ? 'success' : 'danger'">
                   </p-tag>
                 </div>
-                <div class="flex md:align-items-end gap-5">
+                <div class="flex md:align-items-end gap-5 w-6rem max-w-6rem">
                   <span class="font-bold">{{ santa.name }}</span>
                 </div>
-                <div class="flex align-items-center">
+                <div class="flex align-items-center w-12rem max-w-12rem text-sm">
                   <span class="pi pi-gift"></span>
-                  <span class="ml-2">Santa: {{ santa.santaAssigned }}</span>
-                </div>
+                  <ng-container *ngIf="santa.santaAssigned; else noSanta">
+                    <button pButton pRipple="true" label="Supprimer" 
+                      class="ml-2 p-button-danger p-button-sm"
+                      (click)="deleteSanta(santa._id)">
+                    </button>
+                  </ng-container>
+                  <ng-template #noSanta>
+                    <button pButton pRipple="true" label="Lancer Assignement" 
+                      class="ml-2 p-button-success p-button-sm"
+                      (click)="launchSanta(santa._id)">
+                    </button>
+                  </ng-template>
+                </div>                
                 <div class="flex align-items-center">
                   <span class="pi pi-calendar-times"></span>
                   <span class="ml-2">Date du Santa: {{ santa.santaDate | date: 'dd/MM/yyyy' }}</span>
                 </div>
                 <div class="flex align-items-center">
                   <span class="pi pi-users"></span>
-                  <span class="ml-2">Nombre de membres: {{ santa.members }}</span>
+                  <span class="ml-2">Membres: {{ santa.members }}</span>
                 </div>
                 <!-- Bouton Modifier -->
                 <div class="flex align-items-center">

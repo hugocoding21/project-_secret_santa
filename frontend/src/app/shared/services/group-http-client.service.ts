@@ -44,4 +44,18 @@ export class GroupHttpClientService extends ApiService {
   deleteGroup(id: string): Observable<any> {
     return this.delete(`groups/${id}`);
   }
+
+  launchSecretSanta(idGroup: string): Observable<any> {
+    return this.post(`groups/${idGroup}/secret-santa`);
+  }
+  deleteSantaAssignement(idGroup: string){
+    return this.delete(`groups/${idGroup}/secret-santa`);
+  }
+  isUserOrOwnerInGroup(idGroup:string, idUser:string){
+    return this.get(`groups/${idGroup}/members/${idUser}`);
+  }
+
+  showAssociationByMembersId(idGroup:string, idUser:string){
+    return this.get(`groups/${idGroup}/secret-santa/${idUser}`);
+  }
 }
