@@ -41,7 +41,7 @@ exports.assignSecretSantas = async (req, res) => {
     }
 };
 
-exports.getAssignments = async (req, res) => {
+exports.getAllAssignments = async (req, res) => {
     try {
         const { groupId } = req.params;
 

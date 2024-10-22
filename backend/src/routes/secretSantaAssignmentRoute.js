@@ -9,7 +9,7 @@ module.exports = (server) => {
     .get(
       verifyToken,
       checkGroupOwner,
-      secretSantaAssignmentController.getAssignments
+      secretSantaAssignmentController.getAllAssignments
     )
     .post(
       verifyToken,
