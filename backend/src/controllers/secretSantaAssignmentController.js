@@ -1,7 +1,8 @@
-const SecretSantaAssignment = require('../models/secretSantaAssignmentModel');
-const Membership = require('../models/membershipModel');
-const User = require('../models/userModel');
-const Group = require('../models/GroupModel');
+const SecretSantaAssignment = require("../models/secretSantaAssignmentModel");
+const Membership = require("../models/membershipModel");
+const User = require("../models/userModel");
+const Group = require("../models/GroupModel");
+const { sendSantaAttributionEmail } = require("../../utils/mailer");
 
 function assignSecretSantas(members) {
     const assignments = [];
@@ -29,16 +30,23 @@ exports.assignSecretSantas = async (req, res) => {
 
         const assignments = assignSecretSantas(members);
 
-        await SecretSantaAssignment.deleteMany({ groupId }); 
-        await SecretSantaAssignment.insertMany(assignments.map(a => ({
-            ...a,
-            groupId
-        })));
-//TODO: SEND MAIL
-        res.status(200).json({ message: 'Assignations de Secret Santa effectuées avec succès' });
-    } catch (error) {
-        res.status(500).json({ message: 'Erreur d\'assignation Secret Santa', error });
-    }
+    await SecretSantaAssignment.deleteMany({ groupId });
+    await SecretSantaAssignment.insertMany(
+      assignments.map((a) => ({
+        ...a,
+        groupId,
+      }))
+    );
+    await Promise.all(
+      members.map(async (v) => {
+        const recipientEmail = v?.email;
+        await sendSantaAttributionEmail(recipientEmail);
+      })
+    );
+    res.status(200).json({ message: "Assignations de Secret Santa effectuées avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur d'assignation Secret Santa", error });
+  }
 };
 
 exports.getAllAssignments = async (req, res) => {
@@ -85,6 +93,3 @@ exports.clearAssignSecretSantas = async (req, res) => {
       res.status(500).json({ message: 'Error fetching Secret Santa assignment', error });
     }
 };
-
-  
-  
