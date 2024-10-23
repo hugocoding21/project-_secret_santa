@@ -126,7 +126,7 @@ exports.getGroupById = async (req, res) => {
     }
     const santaAssigned = (await secretSantaAssignmentModel.countDocuments({ groupId: group._id })) !== 0;
     res.status(200).json({
-      ...group,
+      ...group.toObject(),
       santaAssigned,
     });
   } catch (error) {
