@@ -57,7 +57,7 @@ exports.getOwnedGroups = async (req, res) => {
 
     const groupsWithMemberCount = await Promise.all(
       groups.map(async (group) => {
-        const members = await Membership.countDocuments({ groupId: group._id });
+        const members = await Membership.countDocuments({ groupId: group._id, isAccepted:true });
         const santaAssigned =  await secretSantaAssignmentModel.countDocuments({ groupId: group._id }) !==0 ;
         return {
           ...group.toObject(),
@@ -85,20 +85,20 @@ exports.getGroups = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const memberships = await Membership.find({ userId: userId });
-
+    const memberships = await Membership.find({ userId: userId, isAccepted:true });
+    
     const groupIds = memberships.map((membership) => membership.groupId);
 
     const groups = await Group.find({ _id: { $in: groupIds } });
     const groupsWithMemberCount = await Promise.all(
       groups.map(async (group) => {
-        const members = await Membership.countDocuments({ groupId: group._id });
+        const members = await Membership.countDocuments({ groupId: group._id, isAccepted: true });
         const assignment = await secretSantaAssignmentModel.findOne({ groupId: group._id, giverId: userId }).populate('receiverId',"username email");
         
         return {
           ...group.toObject(),
           members,
-          receiver:assignment.receiverId
+          receiver:assignment?.receiverId
         };
       })
     );
