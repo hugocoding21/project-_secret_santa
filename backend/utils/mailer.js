@@ -42,7 +42,7 @@ Nous avons hâte de vous accueillir !`,
     console.error("Error sending email:", error);
   }
 };
-const sendSantaAttributionEmail = async (recipientEmail, groupName, santa) => {
+const sendSantaAttributionEmail = async (recipientEmail) => {
   try {
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -50,19 +50,17 @@ const sendSantaAttributionEmail = async (recipientEmail, groupName, santa) => {
       subject: `Votre Secret Santa a été assigné`,
       text: `Bonjour,
 
-Nous vous informons que votre Secret Santa dans le groupe ${groupName} vient de vous être assigné. 
-Vous avez tiré au sort : 
-- ${santa}
+Nous vous informons que votre Secret Santa vient de vous être assigné. 
+
 
 Bonne chance pour trouver le cadeau parfait !`,
       html: `
         <p>Bonjour,</p>
-        <p>Nous vous informons que votre Secret Santa dans le groupe <strong>${groupName}</strong> vient de vous être assigné.</p>
-        <p>Vous avez tiré au sort : <strong>${santa}</strong></p>
+        <p>Nous vous informons que votre Secret Santa dans le groupe vient de vous être assigné.</p>
         <p>Bonne chance pour trouver le cadeau parfait !</p>`,
     };
     await transporter.sendMail(mailOptions);
-    console.log(`Attribution de Secret Santa envoyée à ${recipientEmail} avec succès.`);
+    console.log(`Email envoyée à ${recipientEmail} avec succès.`);
   } catch (error) {
     console.error(`Erreur lors de l'envoi à ${recipientEmail}:`, error);
   }
