@@ -1,7 +1,58 @@
-### Invite user to group
-POST http://localhost:3001/invite
+###
+POST http://localhost:3001/groups
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
 Content-Type: application/json
+
 {
-    "receiver":"hhanocq@gmail.com",
-    "groupeName":"test"
+    "name": "Test Group",
+    "santaDate": "2024-12-25"
+}
+
+###
+GET http://localhost:3001/groups
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+###
+
+GET http://localhost:3001/groups/owned
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+###
+
+GET http://localhost:3001/groups/member
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+### groupId a mettre
+
+GET http://localhost:3001/groups/:groupId 
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+### groupId a mettre
+PUT http://localhost:3001/groups/:groupId
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+{
+    "name": "Updated Group Name",
+    "santaDate": "2024-12-31"
+}
+
+###
+DELETE http://localhost:3001/groups/:groupId
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+###
+
+POST http://localhost:3001/groups/invite
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ3OGQ3YmY2MmY5MGIxZTMzYTg2YyIsImVtYWlsIjoiZmxvcmVudEBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzkxNTUsImV4cCI6MTcyNjg3NTE1NX0.lizQB8HRxtsoRe42IuPkXa0Gov3e7mRlGhydhMVMGCk
+Content-Type: application/json
+
+{
+    "receivers": ["test1@test.com", "test2@test.com"],
+    "groupName": "Test Group"
 }
