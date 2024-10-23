@@ -21,9 +21,20 @@ const sendInvitationEmail = async (recipientEmail, groupName) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: recipientEmail,
-      subject: `You're invited to join the Secret Santa Group: ${groupName}`,
-      text: `Hi! You've been invited to join the Secret Santa group: ${groupName}. Follow the link to join: [Link to join]`,
-      html: `<p>Hi!</p><p>You've been invited to join the Secret Santa group: <strong>${groupName}</strong>.</p><p><a href="http://${process.env.HOST}:${process.env.PORT_FRONT}/">Click here to join</a></p>`,
+      subject: `Invitation à rejoindre le groupe Secret Santa : ${groupName}`,
+      text: `Bonjour,
+
+Vous avez été invité à rejoindre le groupe Secret Santa : ${groupName}.
+
+Cliquez sur le lien ci-dessous pour rejoindre :
+http://${process.env.HOST}:${process.env.PORT_FRONT}/
+
+Nous avons hâte de vous accueillir !`,
+      html: `
+        <p>Bonjour,</p>
+        <p>Vous avez été invité à rejoindre le groupe Secret Santa : <strong>${groupName}</strong>.</p>
+        <p><a href="http://${process.env.HOST}:${process.env.PORT_FRONT}/">Cliquez ici pour rejoindre</a></p>
+        <p>Nous avons hâte de vous accueillir !</p>`,
     };
     await transporter.sendMail(mailOptions);
     console.log("Email sent successfully");
@@ -31,5 +42,30 @@ const sendInvitationEmail = async (recipientEmail, groupName) => {
     console.error("Error sending email:", error);
   }
 };
+const sendSantaAttributionEmail = async (recipientEmail, groupName, santa) => {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: recipientEmail,
+      subject: `Votre Secret Santa a été assigné`,
+      text: `Bonjour,
 
-module.exports = sendInvitationEmail;
+Nous vous informons que votre Secret Santa dans le groupe ${groupName} vient de vous être assigné. 
+Vous avez tiré au sort : 
+- ${santa}
+
+Bonne chance pour trouver le cadeau parfait !`,
+      html: `
+        <p>Bonjour,</p>
+        <p>Nous vous informons que votre Secret Santa dans le groupe <strong>${groupName}</strong> vient de vous être assigné.</p>
+        <p>Vous avez tiré au sort : <strong>${santa}</strong></p>
+        <p>Bonne chance pour trouver le cadeau parfait !</p>`,
+    };
+    await transporter.sendMail(mailOptions);
+    console.log(`Attribution de Secret Santa envoyée à ${recipientEmail} avec succès.`);
+  } catch (error) {
+    console.error(`Erreur lors de l'envoi à ${recipientEmail}:`, error);
+  }
+};
+
+module.exports = { sendInvitationEmail, sendSantaAttributionEmail };

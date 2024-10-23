@@ -1,9 +1,13 @@
+require("dotenv").config({ path: ".env.test" });
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const request = require("supertest");
 const app = require("../app");
 const Group = require("../src/models/GroupModel");
+const secretSantaAssignmentModel = require("../src/models/secretSantaAssignmentModel");
 
 jest.mock("../src/models/GroupModel");
+jest.mock("../src/models/secretSantaAssignmentModel");
 
 describe("Group API", () => {
   let token;
@@ -12,8 +16,9 @@ describe("Group API", () => {
     token = jwt.sign({ id: "507f191e810c19729de860ea" }, process.env.JWT_KEY, { expiresIn: "1h" });
   });
 
-  beforeEach(() => {
+  afterAll(() => {
     jest.clearAllMocks();
+    mongoose.connection.dropCollection("groups");
   });
 
   it("should create a new group", async () => {
@@ -51,11 +56,14 @@ describe("Group API", () => {
 
     Group.findById.mockResolvedValue(mockGroup);
 
+    secretSantaAssignmentModel.countDocuments.mockResolvedValue(1);
+
     const res = await request(app).get(`/groups/507f191e810c19729de860ea`).set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("_id", "507f191e810c19729de860ea");
     expect(res.body).toHaveProperty("name", "Test Group");
+    expect(res.body).toHaveProperty("santaAssigned", true);
   });
 
   it("should update a group", async () => {

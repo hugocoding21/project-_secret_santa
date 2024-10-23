@@ -83,8 +83,8 @@ exports.addMembers = async (req, res) => {
       memberships: results.filter((result) => result.membership),
     });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Error inviting members", error });
+    console.error("Error adding members:", error);
+    return res.status(500).json({ message: "Error adding members", error });
   }
 };
 
@@ -165,11 +165,11 @@ exports.removeMember = async (req, res) => {
     }
 
     const membership = await Membership.findOneAndDelete({ userId, groupId });
-    if (!membership) {
+    if (membership) {
       return res.status(200).json({ message: "Member successfully removed" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error deleting member from group", error });
+    res.status(404).json({ message: "Not Found", error });
   }
 };
 
@@ -193,7 +193,7 @@ exports.verifyIsMemberOrOwner = async (req, res) => {
       return res.status(200).json({ isMember: true, isOwner: true });
     }
 
-    const membership = await Membership.findOne({ groupId, userId,isAccepted:true });
+    const membership = await Membership.findOne({ groupId, userId, isAccepted: true });
     if (membership) {
       return res.status(200).json({ isMember: true, isOwner: false });
     }
@@ -216,13 +216,12 @@ exports.getAllInvitationForUser = async (req, res) => {
     const pendingInvitations = await Membership.find({
       invitedMail: userMail,
       isAccepted: false,
-    })
-    .populate({
-      path: 'groupId',
-      select: 'name ownerId santaDate',
+    }).populate({
+      path: "groupId",
+      select: "name ownerId santaDate",
       populate: {
-        path: 'ownerId',
-        select: 'username',
+        path: "ownerId",
+        select: "username",
       },
     });
 
@@ -230,17 +229,19 @@ exports.getAllInvitationForUser = async (req, res) => {
       return res.status(200).json({ message: "No pending invitations found for the user" });
     }
 
-    const invitationsWithAcceptedCount = await Promise.all(pendingInvitations.map(async (invitation) => {      
-      const members = await Membership.countDocuments({
-        groupId: invitation.groupId._id,
-        isAccepted: true,
-      });
+    const invitationsWithAcceptedCount = await Promise.all(
+      pendingInvitations.map(async (invitation) => {
+        const members = await Membership.countDocuments({
+          groupId: invitation.groupId._id,
+          isAccepted: true,
+        });
 
-      return {
-        ...invitation.toObject(),
-        members,
-      };
-    }));
+        return {
+          ...invitation.toObject(),
+          members,
+        };
+      })
+    );
 
     return res.status(200).json(invitationsWithAcceptedCount);
   } catch (error) {
@@ -258,7 +259,7 @@ exports.getAllInvitationForUser = async (req, res) => {
 const handleInvitation = async (userMail, groupId, isAccepted) => {
   const membership = await Membership.findOne({
     invitedMail: userMail,
-    groupId: groupId
+    groupId: groupId,
   });
 
   if (!membership) {
@@ -266,7 +267,7 @@ const handleInvitation = async (userMail, groupId, isAccepted) => {
   }
 
   membership.isAccepted = isAccepted;
-  membership.invitedMail = ''; // Remove invited email after action
+  membership.invitedMail = ""; // Remove invited email after action
   await membership.save();
 
   return membership;
@@ -317,7 +318,3 @@ exports.declineInvitation = async (req, res) => {
     return res.status(500).json({ message: "Error declining invitation", error });
   }
 };
-
-
-
-

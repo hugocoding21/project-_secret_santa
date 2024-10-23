@@ -1,4 +1,5 @@
 require("dotenv").config({ path: ".env.test" });
+
 const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
@@ -6,7 +7,8 @@ const User = require("../src/models/userModel");
 
 describe("User API", () => {
   beforeAll(async () => {
-    await mongoose.createConnection(process.env.MONGO_URI_TEST);
+    await mongoose.connect(process.env.MONGO_URL);
+
     await request(app).post("/register").send({
       username: "testuser",
       email: "testuser@example.com",
@@ -21,9 +23,7 @@ describe("User API", () => {
 
   afterAll(async () => {
     jest.clearAllMocks();
-
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
+    await mongoose.connection.dropCollection("users");
   });
 
   describe("POST /register", () => {

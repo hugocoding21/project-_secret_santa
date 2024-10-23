@@ -1,5 +1,5 @@
 const Group = require("../models/GroupModel");
-const sendInvitationEmail = require("../../utils/mailer");
+const { sendInvitationEmail } = require("../../utils/mailer");
 const Membership = require("../models/membershipModel");
 const secretSantaAssignmentModel = require("../models/secretSantaAssignmentModel");
 /**
@@ -57,12 +57,12 @@ exports.getOwnedGroups = async (req, res) => {
 
     const groupsWithMemberCount = await Promise.all(
       groups.map(async (group) => {
-        const members = await Membership.countDocuments({ groupId: group._id, isAccepted:true });
-        const santaAssigned =  await secretSantaAssignmentModel.countDocuments({ groupId: group._id }) !==0 ;
+        const members = await Membership.countDocuments({ groupId: group._id });
+        const santaAssigned = (await secretSantaAssignmentModel.countDocuments({ groupId: group._id })) !== 0;
         return {
           ...group.toObject(),
           members,
-          santaAssigned
+          santaAssigned,
         };
       })
     );
@@ -85,20 +85,22 @@ exports.getGroups = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const memberships = await Membership.find({ userId: userId, isAccepted:true });
-    
+    const memberships = await Membership.find({ userId: userId, isAccepted: true });
+
     const groupIds = memberships.map((membership) => membership.groupId);
 
     const groups = await Group.find({ _id: { $in: groupIds } });
     const groupsWithMemberCount = await Promise.all(
       groups.map(async (group) => {
-        const members = await Membership.countDocuments({ groupId: group._id, isAccepted: true });
-        const assignment = await secretSantaAssignmentModel.findOne({ groupId: group._id, giverId: userId }).populate('receiverId',"username email");
-        
+        const members = await Membership.countDocuments({ groupId: group._id });
+        const assignment = await secretSantaAssignmentModel
+          .findOne({ groupId: group._id, giverId: userId })
+          .populate("receiverId", "username email");
+
         return {
           ...group.toObject(),
           members,
-          receiver:assignment?.receiverId
+          receiver: assignment.receiverId,
         };
       })
     );
@@ -119,12 +121,13 @@ exports.getGroups = async (req, res) => {
 exports.getGroupById = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
-    if (!group) return res.status(404).json({ message: "Group not found" });
-    const santaAssigned =  await secretSantaAssignmentModel.countDocuments({ groupId: group._id }) !==0;
-    
-    res.status(200).json(  {
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+    const santaAssigned = (await secretSantaAssignmentModel.countDocuments({ groupId: group._id })) !== 0;
+    res.status(200).json({
       ...group.toObject(),
-      santaAssigned
+      santaAssigned,
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching group", error });
@@ -177,7 +180,6 @@ exports.deleteGroup = async (req, res) => {
  */
 exports.invite = async (req, res) => {
   const { receivers, groupName } = req.body;
-
   try {
     const emailPromises = receivers.map((receiver) => sendInvitationEmail(receiver, groupName));
     await Promise.all(emailPromises);

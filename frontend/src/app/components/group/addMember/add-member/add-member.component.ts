@@ -91,7 +91,7 @@ export class AddMemberComponent implements OnInit {
             .map((err: any) => err.message)
             .join(', ');
           console.error('Error sending email or adding members:', errorMessage);
-          alert(`Error: ${errorMessage}`); // Affiche une alerte ou gérez comme vous le souhaitez
+          alert(`Error: ${errorMessage}`);
         } else {
           console.error('Unexpected error:', error);
           alert('An unexpected error occurred. Please try again.');
