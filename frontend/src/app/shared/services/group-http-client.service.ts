@@ -64,4 +64,13 @@ export class GroupHttpClientService extends ApiService {
   showAssociationByMembersId(idGroup:string, idUser:string){
     return this.get(`groups/${idGroup}/secret-santa/${idUser}`);
   }
+
+  getInvitations(idUser: string){
+    return this.get(`groups/invitations/${idUser}`);
+  }
+
+  manageInvitations(idGroup:string, idUser:string, type: string){
+    const routeName = type === 'accept'?"accept":"decline";
+    return this.post(`groups/${idGroup}/invitation/${idUser}/${routeName}`);
+  }
 }

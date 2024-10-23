@@ -63,11 +63,14 @@
 
 
   <!-- Invitations en attente -->
-  <p-card header="Invitations en attente" class="flex flex-column justify-content-center p-3 mt-4" *ngIf="isGroupOwner">
+  <p-card header="Invitations" class="flex flex-column justify-content-center p-3 mt-4" *ngIf="isGroupOwner">
     <ul class="list-none p-0">
       <li *ngFor="let invite of pendingInvitations"
         class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1">
-        <span *ngIf="invite.invitedMail" class="text-lg font-semibold">{{ invite.invitedMail }}</span>
+        <p-tag [value]="isDeclineOrPending(invite) ? 'en attente' : 'refusé'"
+                      [severity]="isDeclineOrPending(invite) ? 'success' : 'danger'">
+        </p-tag>
+        <span class="text-lg font-semibold">{{ invite.userId && invite.userId.username ?invite.userId.username: invite.invitedMail }}</span>
         <button pButton pRipple="true" icon="pi pi-trash" class="p-button-danger p-button-sm"
           (click)="removeInvite(invite.invitedMail)">
           supprimmer l'invitation
