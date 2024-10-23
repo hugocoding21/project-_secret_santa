@@ -80,21 +80,40 @@ export class AddMemberComponent implements OnInit {
 
       try {
         await this.membershipHttpClientService
-          .addMembers(this.groupId, { email: body.receivers })
+          .addMembers(this.groupId, {
+            email: body.receivers,
+            groupName: this.groupName,
+          })
           .toPromise();
 
-        await this.groupHttpClientService.sendEmailInvitation(body).toPromise();
-        this.router.navigate(['/dashboard']);
-      } catch (error: any) {
-        if (error.status === 400 && error.error && error.error.errors) {
-          const errorMessage = error.error.errors
+        try {
+          await this.groupHttpClientService
+            .sendEmailInvitation(body)
+            .toPromise();
+          this.router.navigate(['/dashboard']);
+        } catch (emailError: any) {
+          console.error('Error sending email invitations:', emailError);
+          alert('Error sending email invitations. Please try again.');
+        }
+      } catch (addMemberError: any) {
+        if (
+          addMemberError.status === 400 &&
+          addMemberError.error &&
+          addMemberError.error.errors
+        ) {
+          const errorMessage = addMemberError.error.errors
             .map((err: any) => err.message)
             .join(', ');
-          console.error('Error sending email or adding members:', errorMessage);
-          alert(`Error: ${errorMessage}`);
+          console.error('Error adding members:', errorMessage);
+          alert(`Error adding members: ${errorMessage}`);
         } else {
-          console.error('Unexpected error:', error);
-          alert('An unexpected error occurred. Please try again.');
+          console.error(
+            'Unexpected error while adding members:',
+            addMemberError
+          );
+          alert(
+            'An unexpected error occurred while adding members. Please try again.'
+          );
         }
       }
     } else {
