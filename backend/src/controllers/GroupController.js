@@ -1,6 +1,7 @@
 const Group = require("../models/GroupModel");
 const sendInvitationEmail = require("../../utils/mailer");
 const Membership = require("../models/membershipModel");
+const secretSantaAssignmentModel = require("../models/secretSantaAssignmentModel");
 /**
  * Create a group
  * @route POST /groups
@@ -53,7 +54,20 @@ exports.getOwnedGroups = async (req, res) => {
     const userId = req.user.id;
 
     const groups = await Group.find({ ownerId: userId });
-    res.status(200).json(groups);
+
+    const groupsWithMemberCount = await Promise.all(
+      groups.map(async (group) => {
+        const members = await Membership.countDocuments({ groupId: group._id });
+        const santaAssigned =  await secretSantaAssignmentModel.countDocuments({ groupId: group._id }) !==0 ;
+        return {
+          ...group.toObject(),
+          members,
+          santaAssigned
+        };
+      })
+    );
+
+    res.status(200).json(groupsWithMemberCount);
   } catch (error) {
     res.status(500).json({ message: "Error fetching groups", error });
   }
@@ -76,8 +90,19 @@ exports.getGroups = async (req, res) => {
     const groupIds = memberships.map((membership) => membership.groupId);
 
     const groups = await Group.find({ _id: { $in: groupIds } });
-
-    res.status(200).json(groups);
+    const groupsWithMemberCount = await Promise.all(
+      groups.map(async (group) => {
+        const members = await Membership.countDocuments({ groupId: group._id });
+        const assignment = await secretSantaAssignmentModel.findOne({ groupId: group._id, giverId: userId }).populate('receiverId',"username email");
+        
+        return {
+          ...group.toObject(),
+          members,
+          receiver:assignment.receiverId
+        };
+      })
+    );
+    res.status(200).json(groupsWithMemberCount);
   } catch (error) {
     res.status(500).json({ message: "Error fetching groups", error });
   }
@@ -95,7 +120,12 @@ exports.getGroupById = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
     if (!group) return res.status(404).json({ message: "Group not found" });
-    res.status(200).json(group);
+    const santaAssigned =  await secretSantaAssignmentModel.countDocuments({ groupId: group._id }) !==0;
+    
+    res.status(200).json(  {
+      ...group.toObject(),
+      santaAssigned
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching group", error });
   }

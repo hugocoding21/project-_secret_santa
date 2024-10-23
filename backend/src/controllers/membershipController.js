@@ -167,3 +167,34 @@ exports.removeMember = async (req, res) => {
     res.status(500).json({ message: "Error deleting member from group", error });
   }
 };
+
+/**
+ * @desc Verify if the user is a member or the owner of a group
+ * @route GET /groups/:groupId/members
+ * @param {string} groupId - The ID of the group
+ * @returns {Object} - Object indicating if the user is a member or the owner, or an error message
+ */
+exports.verifyIsMemberOrOwner = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const userId = req.user.id;
+
+    const group = await checkGroupExists(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    if (group.ownerId.toString() === userId) {
+      return res.status(200).json({ isMember: true, isOwner: true });
+    }
+
+    const membership = await Membership.findOne({ groupId, userId });
+    if (membership) {
+      return res.status(200).json({ isMember: true, isOwner: false });
+    }
+
+    return res.status(403).json({ message: "Access denied: User is neither a member nor the owner." });
+  } catch (error) {
+    res.status(500).json({ message: "Error checking user membership or ownership", error });
+  }
+};

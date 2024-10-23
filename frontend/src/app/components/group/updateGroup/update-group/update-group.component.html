@@ -1,40 +1,55 @@
 <div class="flex flex-column w-10 mx-auto">
   <!-- Title -->
-  <h1 class="text-center text-3xl font-bold underline mb-5">Modifier le groupe : {{ groupData?.name }}</h1>
+  <h1 class="text-center text-3xl font-bold underline mb-5">  {{ isGroupOwner ? 'Modifier le groupe : ' + groupData?.name : 'Groupe: '  + groupData?.name }}
+  </h1>
 
   <!-- Group details card -->
-  <p-card header="Détails du groupe" class="flex flex-column justify-content-center p-3 mb-5 ">
+  <p-card header="Détails du groupe" class="flex flex-column justify-content-center p-3 mb-5">
     <form [formGroup]="groupForm" class="w-full">
       <div class="grid formgrid">
         <div class="field col-12 md:col-6">
           <label for="name" class="block font-semibold mb-2">Nom du groupe</label>
-          <input id="name" type="text" pInputText formControlName="name" placeholder="Nom du groupe"
+          <input [readOnly]="!isGroupOwner" id="name" type="text" pInputText formControlName="name" placeholder="Nom du groupe"
             class="w-full p-inputtext-lg" />
         </div>
 
         <div class="field col-12 md:col-6">
           <label for="santaDate" class="block font-semibold mb-2">Date du Santa</label>
-          <input id="santaDate" type="date" pInputText formControlName="santaDate" class="w-full p-inputtext-lg" />
+          <input [readOnly]="!isGroupOwner" id="santaDate" type="date" pInputText formControlName="santaDate" class="w-full p-inputtext-lg" />
         </div>
       </div>
 
-      <div class="flex justify-content-center mt-4 gap-3">
+      <div class="flex justify-content-center mt-4 gap-3" 
+      *ngIf="isGroupOwner">
         <button pButton pRipple="true" label="Supprimer le groupe" icon="pi pi-trash"
           class="p-button-danger p-button-lg" (click)="deleteGroup()"></button>
         <button pButton pRipple="true" label="Sauvegarder" icon="pi pi-save" class="p-button-success p-button-lg"
           (click)="updateGroup()"></button>
       </div>
     </form>
-
   </p-card>
 
   <!-- Membres du groupe -->
   <p-card header="Membres du groupe" class="flex flex-column justify-content-center p-3">
     <ul class="list-none p-0">
-      <li *ngFor="let member of getValidGroupMembers()"
-        class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1">
-        <span class="text-lg font-semibold">{{ member?.userId.username }}</span>
-        <button pButton pRipple="true" icon="pi pi-trash" class="p-button-danger p-button-sm"
+      <li *ngFor="let member of getValidGroupMembers(); let i = index" class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1 flex-wrap" >
+        <span class="text-lg font-semibold w-6rem max-w-6rem">{{ member?.userId.username }}</span>
+        
+        <!-- Association information -->
+        <div class="mt-2 flex align-items-center justify-content-between gap-3 flex-wrap" *ngIf="santaAssigned && isGroupOwner">
+          <button pButton pRipple="true" icon="pi pi-eye" class="p-button-sm"
+            (click)="toggleAssociationVisibility(i)">
+            <span class="ml-2">
+              {{ member.showAssociation ? 'Cacher association' : 'Voir association' }}
+            </span>
+          </button>
+
+          <p class="text-lg ml-2 w-17rem">
+            Offre un cadeau à : <span *ngIf="member.showAssociation">{{ member.associatedWith }}</span>
+          </p>        
+        </div>
+
+        <button *ngIf="isGroupOwner" pButton pRipple="true" icon="pi pi-trash" class="p-button-danger p-button-sm"
           (click)="removeMember(member?.userId._id)">
           Supprimer
         </button>
@@ -48,7 +63,7 @@
 
 
   <!-- Invitations en attente -->
-  <p-card header="Invitations en attente" class="flex flex-column justify-content-center p-3 mt-4">
+  <p-card header="Invitations en attente" class="flex flex-column justify-content-center p-3 mt-4" *ngIf="isGroupOwner">
     <ul class="list-none p-0">
       <li *ngFor="let invite of pendingInvitations"
         class="flex align-items-center justify-content-between p-2 mb-2 border-bottom-1">

@@ -11,6 +11,12 @@ module.exports = (server) => {
 
   server
     .route("/groups/:groupId/members/:userId")
-    .put(verifyToken, validateMembership, checkGroupOwner, membershipController.updateMemberStatus)
+    .get(verifyToken,validateMembership,membershipController.verifyIsMemberOrOwner)
+    .put(
+      verifyToken,
+      validateMembership,
+      checkGroupOwner,
+      membershipController.updateMemberStatus
+    )
     .delete(verifyToken, checkGroupOwner, membershipController.removeMember);
 };

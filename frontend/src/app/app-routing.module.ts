@@ -9,6 +9,7 @@ import { AddMemberComponent } from './components/group/addMember/add-member/add-
 import { UpdateGroupComponent } from './components/group/updateGroup/update-group/update-group.component';
 import { ProfilComponent } from './profil/profil.component';
 import { AuthGuard } from './guards/auth.guard';
+import { GroupAccessGuard } from './guards/group-access.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' }, // Redirige vers home si la route est vide
@@ -23,8 +24,8 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'group/add', component: createGroupComponent },
       { path: 'group/add-member/:id', component: AddMemberComponent },
-      { path: 'group/edit/:id', component: UpdateGroupComponent },
-    ],
+      { path: 'group/view/:id', component: UpdateGroupComponent,canActivate: [GroupAccessGuard], },
+    ]
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' }, // Redirige toute autre route vers home
 ];

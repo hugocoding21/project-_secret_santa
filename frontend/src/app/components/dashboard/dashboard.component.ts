@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
   userGroups: Array<Group> = [];
 
   currentDate: Date = new Date();
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+  private successTimeout: any;
 
   constructor(
     private titleService: Title,
@@ -25,7 +28,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle(this.title);
-    this.getOwnedGroup();
+    this.getGroups(true); //owned groups
+    this.getGroups();
   }
 
   isSantaInProgress(santaDate: string | Date): boolean {
@@ -33,34 +37,67 @@ export class DashboardComponent implements OnInit {
   }
 
   /* Récupere les group créer par l'utilisateur */
-  getOwnedGroup(): void {
-    this.groupHttpClientService.geOwnerGroup().subscribe(
-      (groups: Array<Group>) => {
-        this.secretSantas = groups;
+  getGroups(owner: boolean = false): void {
+    this.groupHttpClientService.getGroups(owner).subscribe({
+      next: (data: any) => {
+        if (owner) {
+          this.secretSantas = data;
+        } else {          
+          this.userGroups=data;
+        }
+        
       },
-      (error: Error) => {
-        console.error('Erreur lors de la récupération des groupes', error);
-      }
-    );
-  }
-
-  /* Recupere les groupes où le user est membre */
-  getUserGroup(): void {
-    this.groupHttpClientService.getUserGroup().subscribe(
-      (groups: Array<Group>) => {
-        this.userGroups = groups;
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
       },
-      (error: Error) => {
-        console.error('Erreur lors de la récupération des groupes', error);
-      }
-    );
+    });
   }
 
   editGroup(groupId: string): void {
-    this.router.navigate(['/group/edit', groupId]);
+    this.router.navigate(['/group/view', groupId]);
   }
 
   addMembers(id: string): void {
     this.router.navigate([`/group/add-member/${id}`]);
+  }
+
+  deleteSanta(id: any) {
+    this.groupHttpClientService.deleteSantaAssignement(id).subscribe({
+      next: (data: any) => {
+        this.handleSuccess(data, true);
+      },
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
+      },
+    });
+  }
+  launchSanta(id: any) {
+    this.groupHttpClientService.launchSecretSanta(id).subscribe({
+      next: (data) => {
+        this.handleSuccess(data);
+      },
+      error: (error) => {
+        console.error(error);
+        this.successMessage = null;
+        this.errorMessage = error.error.message;
+      },
+    });
+  }
+
+  handleSuccess(data: any, owned: boolean = false) {
+    this.successMessage = data.message;
+    this.errorMessage = null;
+
+    if (this.successTimeout) {
+      clearTimeout(this.successTimeout);
+    }
+    this.successTimeout = setTimeout(() => {
+      this.successMessage = null;
+    }, 3000);
+    this.getGroups(true);
   }
 }

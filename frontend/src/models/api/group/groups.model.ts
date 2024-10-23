@@ -7,4 +7,5 @@ export interface Group {
   santaAssigned: string;
   createdAt: Date;
   updatedAt: Date;
+  receiver?: {username:string, email:string}
 }
