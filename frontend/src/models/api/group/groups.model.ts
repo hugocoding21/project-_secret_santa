@@ -8,4 +8,5 @@ export interface Group {
   createdAt: Date;
   updatedAt: Date;
   receiver?: {username:string, email:string}
+  ownerName?: string;
 }

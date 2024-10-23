@@ -87,17 +87,25 @@ export class UpdateGroupComponent extends AppController implements OnInit {
     );
 
     this.membershipHttpClientService.getMembersOfGroup(this.groupId).subscribe(
-      (data) => {        
-        this.groupMembers = data;
-
+      (data) => {
+        console.log(data);
+        
+        this.groupMembers = data.filter(
+          (member: any) => (member.invitedMail ||member.invitedMail == null || member.invitedMail ==='') && member.isAccepted === true
+        );
+    
         this.pendingInvitations = data.filter(
-          (invitation: any) => invitation.invitedMail
+          (invitation: any) => invitation.invitedMail != null && invitation.isAccepted === false
         );
       },
       (error) => {
         console.error('Error loading group data', error);
       }
     );
+  }
+  isDeclineOrPending(invite:any){
+    return invite.invitedMail && invite.invitedMail.trim() !== '' && invite.isAccepted === false;
+    
   }
 
   removeMember(memberId: string): void {
@@ -152,7 +160,7 @@ export class UpdateGroupComponent extends AppController implements OnInit {
     }
   }
 
-  getValidGroupMembers() {
+  getValidGroupMembers() {    
     return this.groupMembers?.filter((member: any) => member.userId) || [];
   }
 

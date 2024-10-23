@@ -1,7 +1,9 @@
-const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const Membership = require("../models/membershipModel");
+
 
 /**
  * Registers a new user.
@@ -23,7 +25,21 @@ exports.userRegister = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
     });
+    //find pendingInvitation and add userId to it
     const user = await newUser.save();
+
+    const pendingInvitations = await Membership.find({
+      invitedMail: req.body.email,
+      isAccepted: false,
+    });
+    if (pendingInvitations.length > 0) {
+      await Promise.all(
+        pendingInvitations.map(async (invitation) => {          
+          invitation.userId = user._id;
+          await invitation.save();
+        })
+      );
+    }
     res.status(201).json({ message: `User created: ${user.email}` });
   } catch (error) {
     res.status(500).json({ message: "Registration error", error });
@@ -110,13 +126,13 @@ exports.modifyUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-        res.status(200).json(updatedUser);
-    } catch (error) {
-				if (error instanceof mongoose.Error.CastError) {
-					return res.status(400).json({ message: "Invalid format ID" });
-				}
-        res.status(500).json({ message: 'Error in modifying user', error });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(400).json({ message: "Invalid format ID" });
     }
+    res.status(500).json({ message: "Error in modifying user", error });
+  }
 };
 
 /**
@@ -136,13 +152,13 @@ exports.getUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-        res.status(200).json(user);
-    } catch (error) {
-		    if (error instanceof mongoose.Error.CastError) {
-			    return res.status(400).json({ message: "Invalid format ID" });
-		    }
-        res.status(500).json({ message: 'Error in retrieving user', error });
+    res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(400).json({ message: "Invalid format ID" });
     }
+    res.status(500).json({ message: "Error in retrieving user", error });
+  }
 };
 
 /**
@@ -162,11 +178,11 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-        res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-				if (error instanceof mongoose.Error.CastError) {
-					return res.status(400).json({ message: "Invalid format ID" });
-				}
-        res.status(500).json({ message: 'Error in deleting user', error });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(400).json({ message: "Invalid format ID" });
     }
+    res.status(500).json({ message: "Error in deleting user", error });
+  }
 };

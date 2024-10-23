@@ -27,6 +27,8 @@ exports.addMembers = async (req, res) => {
     const results = await Promise.all(
       email.map(async (email) => {
         const user = await User.findOne({ email });
+        let membership;
+
         if (user === null) {
           const existingMembership = await Membership.findOne({
             invitedMail: email,
@@ -34,52 +36,55 @@ exports.addMembers = async (req, res) => {
           });
 
           if (existingMembership) {
-            return { email, message: "User is already a member or invited" };
+            return { email, message: "User is already invited" };
           }
 
-          const membership = new Membership({
+          membership = new Membership({
             invitedMail: email,
             groupId,
             isAccepted: false,
           });
-          await membership.save();
-          return { email, membership };
-        }
+        } else {
+          const existingMembership = await Membership.findOne({
+            userId: user._id,
+            groupId,
+          });
 
-        const existingMembership = await Membership.findOne({
-          userId: user._id,
-          groupId,
-        });
-        if (existingMembership) {
-          return { email: user.email, message: `${user.email}  deja invité. Veuillez supprimer la ligne.` };
-        }
+          if (existingMembership) {
+            return {
+              email: user.email,
+              message: `${user.email} is already invited.`,
+            };
+          }
 
-        const membership = new Membership({
-          userId: user._id,
-          groupId,
-          isAccepted: false,
-        });
+          membership = new Membership({
+            userId: user._id,
+            invitedMail: user.email,
+            groupId,
+            isAccepted: false,
+          });
+        }
 
         await membership.save();
-        return { email: user.email, membership };
+        return { email, membership };
       })
     );
 
     const errors = results.filter((result) => result.message);
     if (errors.length > 0) {
       return res.status(400).json({
-        message: "Some user are already members",
+        message: "Some users are already members or invited",
         errors,
       });
     }
 
     return res.status(201).json({
-      message: "Members added successfully",
+      message: "Members invited successfully",
       memberships: results.filter((result) => result.membership),
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Error adding members", error });
+    return res.status(500).json({ message: "Error inviting members", error });
   }
 };
 
@@ -188,7 +193,7 @@ exports.verifyIsMemberOrOwner = async (req, res) => {
       return res.status(200).json({ isMember: true, isOwner: true });
     }
 
-    const membership = await Membership.findOne({ groupId, userId });
+    const membership = await Membership.findOne({ groupId, userId,isAccepted:true });
     if (membership) {
       return res.status(200).json({ isMember: true, isOwner: false });
     }
@@ -198,3 +203,121 @@ exports.verifyIsMemberOrOwner = async (req, res) => {
     res.status(500).json({ message: "Error checking user membership or ownership", error });
   }
 };
+
+/**
+ * @desc Get all pending invitations for a user
+ * @route GET /invitations/:userId
+ * @returns {Array} - List of pending invitations or error message
+ */
+exports.getAllInvitationForUser = async (req, res) => {
+  try {
+    const userMail = req.user.email;
+
+    const pendingInvitations = await Membership.find({
+      invitedMail: userMail,
+      isAccepted: false,
+    })
+    .populate({
+      path: 'groupId',
+      select: 'name ownerId santaDate',
+      populate: {
+        path: 'ownerId',
+        select: 'username',
+      },
+    });
+
+    if (pendingInvitations.length === 0) {
+      return res.status(200).json({ message: "No pending invitations found for the user" });
+    }
+
+    const invitationsWithAcceptedCount = await Promise.all(pendingInvitations.map(async (invitation) => {      
+      const members = await Membership.countDocuments({
+        groupId: invitation.groupId._id,
+        isAccepted: true,
+      });
+
+      return {
+        ...invitation.toObject(),
+        members,
+      };
+    }));
+
+    return res.status(200).json(invitationsWithAcceptedCount);
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching invitations", error });
+  }
+};
+
+/**
+ * @desc Handle invitation to a group (accept or decline)
+ * @param {string} userMail - The email of the user handling the invitation
+ * @param {string} groupId - The ID of the group
+ * @param {boolean} isAccepted - Whether the invitation is accepted (true) or declined (false)
+ * @returns {Object} - Success message and updated membership object
+ */
+const handleInvitation = async (userMail, groupId, isAccepted) => {
+  const membership = await Membership.findOne({
+    invitedMail: userMail,
+    groupId: groupId
+  });
+
+  if (!membership) {
+    throw new Error("Invitation not found");
+  }
+
+  membership.isAccepted = isAccepted;
+  membership.invitedMail = ''; // Remove invited email after action
+  await membership.save();
+
+  return membership;
+};
+
+/**
+ * @desc Accept an invitation to a group
+ * @route PUT /invitations/:userId/accept
+ * @param {string} userId - The ID of the user accepting the invitation
+ * @param {string} groupId - The ID of the group
+ * @returns {Object} - Success message and updated membership object
+ */
+exports.acceptInvitation = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const userMail = req.user.email;
+
+    const membership = await handleInvitation(userMail, groupId, true);
+
+    return res.status(200).json({ message: "Invitation accepted successfully", membership });
+  } catch (error) {
+    if (error.message === "Invitation not found") {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({ message: "Error accepting invitation", error });
+  }
+};
+
+/**
+ * @desc Decline an invitation to a group
+ * @route DELETE /invitations/:userId/decline
+ * @param {string} userId - The ID of the user declining the invitation
+ * @param {string} groupId - The ID of the group
+ * @returns {Object} - Success message or error message
+ */
+exports.declineInvitation = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const userMail = req.user.email;
+
+    await handleInvitation(userMail, groupId, false);
+
+    return res.status(200).json({ message: "Invitation declined successfully" });
+  } catch (error) {
+    if (error.message === "Invitation not found") {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({ message: "Error declining invitation", error });
+  }
+};
+
+
+
+
