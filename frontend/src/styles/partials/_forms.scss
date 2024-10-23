@@ -1,0 +1,61 @@
+@use "../partials/functions" as f;
+
+@layer forms {
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: f.rem(16);
+        width: 100%;
+    }
+
+    .form-error {
+        color: var(--red);
+        font-size: var(--font-size-default);
+
+        font-weight: bold;
+    }
+    .form-success {
+        color: var(--green);
+        font-size: var(--font-size-default);
+        font-weight: bold;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: f.rem(8);
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-input {
+        padding: f.rem(8);
+        font-size: 1rem;
+        border: f.rem(1) solid #ccc;
+        border-radius: f.rem(4);
+        width: 100%;
+    }
+
+    .form-error {
+        color: var(--red);
+        font-size: 0.875rem;
+    }
+
+    .form-button {
+        padding: f.rem(10);
+        font-size: 1rem;
+        border: none;
+        border-radius: f.rem(4);
+        background-color: var(--blue-lighter);
+        color: var(--white);
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .form-button:hover {
+        background-color: var(--blue);
+    }
+}

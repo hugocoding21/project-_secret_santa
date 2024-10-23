@@ -1,0 +1,53 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/utils:/app/utils
+      - ./backend/app.js:/app/app.js
+      - ./backend/server.js:/app/server.js
+      - ./backend/.env:/app/.env
+      - ./backend/package.json:/app/package.json
+      - ./backend/package-lock.json:/app/package-lock.json
+    networks:
+      - app-network
+    container_name: backend
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    platform: linux/amd64
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/angular.json:/app/angular.json
+      - ./frontend/src/app:/app/src/app
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/package.lock.json:/app/package.lock.json
+    networks:
+      - app-network
+    command: npm run start -- --host 0.0.0.0 --poll 2000
+    container_name: frontend
+
+  mongo:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    container_name: mongo
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

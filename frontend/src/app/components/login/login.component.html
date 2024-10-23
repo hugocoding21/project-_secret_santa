@@ -1,0 +1,8 @@
+<div class="auth-container">
+  <app-form [formTitle]="'Login'" [formFields]="formFields" [formGroup]="formGroup" [submitButtonText]="'Login'"
+    (formSubmitted)="onSubmit($event)"></app-form>
+  <div class="form-error" *ngIf="error.bool" [@slideIn]>{{ error.message }}</div>
+  <p class="auth-link">
+    Don't have an account? <a routerLink="/register">Register here</a>
+  </p>
+</div>

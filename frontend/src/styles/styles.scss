@@ -1,0 +1,13 @@
+@use "partials/layers";
+
+@use "vendor/modern-normalize.css";
+
+@use "partials/globals";
+@use "partials/utilities";
+@use "partials/forms";
+// @use "~ngx-spinner/ngx-spinner.css";
+@use "components/container";
+
+
+
+@import "primeng/resources/themes/saga-blue/theme.css";
