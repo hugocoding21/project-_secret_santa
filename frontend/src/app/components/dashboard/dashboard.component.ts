@@ -40,6 +40,10 @@ export class DashboardComponent extends AppController implements OnInit {
     this.getInvitations();
   }
 
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
   isSantaInProgress(santaDate: string | Date): boolean {
     return new Date(santaDate).getTime() >= this.currentDate.getTime();
   }
@@ -47,8 +51,8 @@ export class DashboardComponent extends AppController implements OnInit {
   getInvitations() {
     this.groupHttpClientService.getInvitations(this.user.id).subscribe({
       next: (data: any) => {
-        this.pendingInvitations=[];
-        if (data.length>0) {
+        this.pendingInvitations = [];
+        if (data.length > 0) {
           this.pendingInvitations = data;
         }
       },
@@ -126,15 +130,18 @@ export class DashboardComponent extends AppController implements OnInit {
 
   manageInvitation(groupId: string, type: string) {
     if (type === 'accept') {
-      this.handleInvitation(groupId,type);
+      this.handleInvitation(groupId, type);
     } else {
-      if (confirm("Êtes-vous sûr de vouloir décliner l'invitation à ce groupe ?")) {
-        this.handleInvitation(groupId,type);
+      if (
+        confirm("Êtes-vous sûr de vouloir décliner l'invitation à ce groupe ?")
+      ) {
+        this.handleInvitation(groupId, type);
       }
     }
   }
-   handleInvitation(groupId:string,type:string) {
-    this.groupHttpClientService.manageInvitations(groupId, this.user.id, type)
+  handleInvitation(groupId: string, type: string) {
+    this.groupHttpClientService
+      .manageInvitations(groupId, this.user.id, type)
       .subscribe({
         next: (data) => {
           this.getInvitations();
@@ -147,6 +154,5 @@ export class DashboardComponent extends AppController implements OnInit {
           this.errorMessage = error.error.message;
         },
       });
-  };
-  
+  }
 }
