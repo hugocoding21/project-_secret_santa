@@ -1,35 +1,60 @@
 <div class="home-container">
-  <h1>Bienvenue sur Secret Santa!</h1>
-
-  <div class="img-container">
-    <img id="gift" src="../assets/gift.jpeg" alt="gift" />
-    <p id="img-text">
-      Participez à un échange de cadeaux amusant et surprenant avec vos amis et
-      votre famille.
+  <div class="header-section">
+    <h1>Bienvenue sur Secret Santa !</h1>
+    <p>
+      Participez à un échange de cadeaux amusant et surprenant avec vos amis et votre famille.
     </p>
   </div>
 
+  <div class="cta">
+    <button pButton label="Inscrivez-vous maintenant!" icon="pi pi-user-plus" class="btn"></button>
+    <button pButton label="Connectez-vous" icon="pi pi-sign-in" class="btn"></button>
+  </div>
+
   <section class="features">
-    <h2>Comment ça marche?</h2>
-    <ul>
-      <li>
-        <strong>Inscrivez-vous:</strong> Créez un compte ou connectez-vous.
-      </li>
-      <li><strong>Formez un groupe:</strong> Invitez vos amis à participer.</li>
-      <li>
-        <strong>Tirez au sort:</strong> Chaque participant se verra attribuer un
-        autre participant à qui offrir un cadeau.
-      </li>
-      <li>
-        <strong>Fêtez ensemble:</strong> Échangez vos cadeaux lors d'une fête ou
-        d'un événement spécial.
-      </li>
-    </ul>
+    <h2>Comment ça marche ?</h2>
+    <div class="card-container">
+      <div class="card" *ngFor="let feature of features">
+        <div class="ribbon"></div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
   </section>
 
-  <section class="cta">
-    <h2>Prêt à commencer?</h2>
-    <a routerLink="/register" class="btn">Inscrivez-vous maintenant!</a>
-    <a routerLink="/login" class="btn">Connectez-vous</a>
-  </section>
+  <div class="snowflakes" aria-hidden="true">
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❄</div>
+  </div>
+  <div class="gifts" aria-hidden="true">
+    
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+    <div class="gift">🎁</div>
+  </div>
 </div>
