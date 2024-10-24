@@ -1,7 +1,13 @@
 @use "../partials/functions" as f;
+@use "../partials/variables" as *;
+
 
 @layer forms {
 
+    h2 {
+        text-align: center;
+        color: $primary-color;
+    }
     form {
         display: flex;
         flex-direction: column;
@@ -9,12 +15,6 @@
         width: 100%;
     }
 
-    .form-error {
-        color: var(--red);
-        font-size: var(--font-size-default);
-
-        font-weight: bold;
-    }
     .form-success {
         color: var(--green);
         font-size: var(--font-size-default);
@@ -29,6 +29,7 @@
 
     .form-label {
         font-weight: bold;
+        color: $primary-color;
     }
 
     .form-input {
@@ -40,9 +41,19 @@
     }
 
     .form-error {
-        color: var(--red);
-        font-size: 0.875rem;
+        color: #e3940b;
+        font-size: var(--font-size-default);
+
+        font-weight: bold;
     }
+
+    .error-db {
+        color: red;
+        font-size: var(--font-size-default);
+
+        font-weight: bold;
+    }
+    
 
     .form-button {
         padding: f.rem(10);
