@@ -2,13 +2,6 @@
 @use '../../../styles/partials/mixin' as *;
 
 
-// Layout
-body,
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
 
 .home-container {
   text-align: center;
@@ -20,6 +13,7 @@ html {
   justify-content: center;
   align-items: center;
   background: $background-gradient;
+  overflow: hidden;
 
   .header-section {
     margin-bottom: 20px;

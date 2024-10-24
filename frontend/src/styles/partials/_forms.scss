@@ -1,7 +1,13 @@
 @use "../partials/functions" as f;
+@use "../partials/variables" as *;
+
 
 @layer forms {
 
+    h2 {
+        text-align: center;
+        color: $primary-color;
+    }
     form {
         display: flex;
         flex-direction: column;
@@ -29,6 +35,7 @@
 
     .form-label {
         font-weight: bold;
+        color: $primary-color;
     }
 
     .form-input {
@@ -40,7 +47,7 @@
     }
 
     .form-error {
-        color: var(--red);
+        color: #e3940b;
         font-size: 0.875rem;
     }
 
