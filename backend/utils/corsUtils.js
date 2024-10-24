@@ -4,7 +4,8 @@ const allowedOrigins = [
     'http://localhost:4200',
     'https://secret-santa-6q4v60h5a-froggys974s-projects.vercel.app',
     'https://secret-santa-4kqtw6fv7-froggys974s-projects.vercel.app',
-    '/^https:\/\/secret-santa-[a-z0-9]+-froggys974s-projects\.vercel\.app$/'
+    '/^https:\/\/secret-santa-[a-z0-9]+-froggys974s-projects\.vercel\.app$/',
+    'https://frontend-seven-sigma-69.vercel.app'
     
 ];
 
