@@ -82,7 +82,7 @@ describe("Group Membership API", () => {
         .send({ email: ["test@example.com"] });
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty("message", "Members added successfully");
+      expect(res.body).toHaveProperty("message", "Members invited successfully");
       expect(res.body.memberships).toEqual(
         expect.arrayContaining([expect.objectContaining({ email: "test@example.com" })])
       );
@@ -111,7 +111,7 @@ describe("Group Membership API", () => {
         .send({ email: ["nonexistent@example.com"] });
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty("message", "Members added successfully");
+      expect(res.body).toHaveProperty("message", "Members invited successfully");
       expect(res.body.memberships).toEqual(
         expect.arrayContaining([expect.objectContaining({ email: "nonexistent@example.com" })])
       );
@@ -130,7 +130,7 @@ describe("Group Membership API", () => {
         .send({ email: ["alreadyMember@example.com"] });
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message", "Some users are already members");
+      expect(res.body).toHaveProperty("message", "Some users are already members or invited");
       expect(res.body.errors).toEqual(
         expect.arrayContaining([expect.objectContaining({ email: "alreadyMember@example.com" })])
       );
@@ -146,12 +146,10 @@ describe("Group Membership API", () => {
         .send({ email: ["invited@example.com"] });
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message", "Some users are already members");
-      expect(res.body.errors).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ message: "alreadyMember@example.com déjà invité. Veuillez supprimer la ligne." }),
-        ])
-      );
+      expect(res.body).toHaveProperty("message", "Some users are already members or invited");
+      expect(res.body.errors).toEqual([
+        { email: "alreadyMember@example.com", message: "alreadyMember@example.com is already invited." },
+      ]);
     });
   });
 
@@ -185,10 +183,7 @@ describe("Group Membership API", () => {
       const mockMembership = { userId: mockUserId, groupId: mockGroupId };
 
       Group.findById = jest.fn().mockResolvedValue({ _id: mockGroupId, ownerId: "507f191e810c19729de860eb" });
-      Membership.findOneAndDelete = jest
-        .fn()
-        .mockResolvedValueOnce(null) // Simuler aucune invitation trouvée
-        .mockResolvedValueOnce(mockMembership); // Simuler que le membre est trouvé
+      Membership.findOneAndDelete = jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(mockMembership);
 
       const res = await request(app).delete(`/groups/${mockGroupId}/members/${mockUserId}`).set("Authorization", token);
 
@@ -198,16 +193,16 @@ describe("Group Membership API", () => {
 
     it("should return 200 if the invite is removed", async () => {
       Group.findById = jest.fn().mockResolvedValue({ _id: mockGroupId, ownerId: "507f191e810c19729de860eb" });
-      Membership.findOneAndDelete = jest.fn().mockResolvedValueOnce({ invitedMail: mockUserId }); // Invitation trouvée
+      Membership.findOneAndDelete = jest.fn().mockResolvedValueOnce({ invitedMail: mockUserId });
 
       const res = await request(app).delete(`/groups/${mockGroupId}/members/${mockUserId}`).set("Authorization", token);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "invite successfully removed"); // Test pour la suppression d'une invitation
+      expect(res.body).toHaveProperty("message", "invite successfully removed");
     });
 
     it("should return 404 if group is not found", async () => {
-      Group.findById = jest.fn().mockResolvedValue(null); // Aucune groupe trouvé
+      Group.findById = jest.fn().mockResolvedValue(null);
 
       const res = await request(app).delete(`/groups/${mockGroupId}/members/${mockUserId}`).set("Authorization", token);
 
@@ -217,7 +212,7 @@ describe("Group Membership API", () => {
 
     it("should return 500 if an error occurs", async () => {
       Group.findById = jest.fn().mockResolvedValue({ _id: mockGroupId, ownerId: "507f191e810c19729de860eb" });
-      Membership.findOneAndDelete = jest.fn().mockRejectedValue(new Error("Database error")); // Simuler une erreur
+      Membership.findOneAndDelete = jest.fn().mockRejectedValue(new Error("Database error"));
 
       const res = await request(app).delete(`/groups/${mockGroupId}/members/${mockUserId}`).set("Authorization", token);
 
