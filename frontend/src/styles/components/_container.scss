@@ -22,30 +22,30 @@
     position: relative;
     height: 100vh;
     width: 100vw;
-    background: $background-gradient; /* Utiliser le même dégradé que la page d'accueil */
+    background: $background-gradient;
     overflow: hidden;
   
     app-form {
       width: 100%;
-      max-width: 400px; /* Largeur maximale du formulaire */
-      background: rgba(255, 255, 255, 0.9); /* Fond blanc légèrement transparent */
-      border-radius: 10px; /* Coins arrondis */
-      padding: 20px; /* Espace intérieur */
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Ombre */
-      position: relative; /* Pour permettre le positionnement des éléments enfants */
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px; 
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
     }
 
     .auth-link {
-      margin-top: 20px; /* Espace au-dessus du lien */
-      font-size: 0.9rem; /* Taille de police */
-      text-align: center; /* Centrer le texte */
+      margin-top: 20px; 
+      font-size: 0.9rem;
+      text-align: center; 
   
       a {
-        color: #064d99; /* Couleur du lien */
-        text-decoration: none; /* Pas de soulignement par défaut */
+        color: #064d99; 
+        text-decoration: none;
   
         &:hover {
-          text-decoration: underline; /* Souligner au hover */
+          text-decoration: underline;
         }
       }
     }

@@ -20,7 +20,7 @@
       <a href="/group/add" pButton pRipple="true" icon="pi pi-plus-circle" label="Créer un groupe"></a>
     </div>
     <div class="flex flex-column">
-      <div class="form-error" *ngIf="errorMessage" [@slideIn]>
+      <div class="error-db" *ngIf="errorMessage" [@slideIn]>
         {{ errorMessage }}
       </div>
       <div class="form-success" *ngIf="successMessage" [@slideIn]>

@@ -15,12 +15,6 @@
         width: 100%;
     }
 
-    .form-error {
-        color: var(--red);
-        font-size: var(--font-size-default);
-
-        font-weight: bold;
-    }
     .form-success {
         color: var(--green);
         font-size: var(--font-size-default);
@@ -48,8 +42,18 @@
 
     .form-error {
         color: #e3940b;
-        font-size: 0.875rem;
+        font-size: var(--font-size-default);
+
+        font-weight: bold;
     }
+
+    .error-db {
+        color: red;
+        font-size: var(--font-size-default);
+
+        font-weight: bold;
+    }
+    
 
     .form-button {
         padding: f.rem(10);
