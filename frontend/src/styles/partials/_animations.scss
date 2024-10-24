@@ -1,0 +1,28 @@
+@keyframes fall {
+    0% {
+      top: -10px;
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      top: 100vh;
+      opacity: 0;
+    }
+  }
+  
+  @keyframes fall-gift {
+    0% {
+      top: -10px;
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      top: 100vh;
+      opacity: 0;
+    }
+  }
+  

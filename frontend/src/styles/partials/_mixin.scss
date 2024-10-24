@@ -8,3 +8,30 @@
     align-items: $align;
     gap: $gap;
 }
+
+@mixin transition($property, $duration: 0.3s) {
+    transition: $property $duration;
+}
+
+@mixin generateSnowflakesAndGifts() {
+    @for $i from 1 through 50 {
+        // Flocons de neige
+        .snowflake:nth-child(#{$i}) {
+            left: ($i * 5 % 100%); // Positionnement sur l'axe horizontal
+            animation-duration: #{10 + random(5)}s; // Durée d'animation entre 10 et 15 secondes
+            animation-delay: #{($i - random(3)) * 1}s; // Décalage de l'animation
+            opacity: #{random(5) / 10 + 0.5}; // Opacité aléatoire entre 0.5 et 1
+        }
+
+        // Cadeaux
+        .gift:nth-child(#{$i}) {
+            left: ($i * 5 % 100%); // Positionnement sur l'axe horizontal
+            animation-duration: #{10 + random(5)}s; // Durée d'animation entre 10 et 15 secondes
+            animation-delay: #{($i - random(3)) * 1}s; // Décalage de l'animation
+            opacity: #{random(5) / 10 + 0.5}; // Opacité aléatoire entre 0.5 et 1
+        }
+    }
+}
+
+
+  

@@ -1,64 +1,181 @@
+@use '../../../styles/partials/variables' as *;
+@use '../../../styles/partials/mixin' as *;
+
+
+// Layout
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .home-container {
   text-align: center;
-}
-
-h1 {
-  font-size: 2.2em;
-}
-
-.img-container {
+  padding: 2em;
   position: relative;
-  display: inline-block;
-  width: 100vw;
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
+  background: $background-gradient;
 
-#gift {
-  width: 100%;
-  height: 60vh;
-}
+  .header-section {
+    margin-bottom: 20px;
 
-#img-text {
-  position: absolute;
-  color: white;
-  background: rgba(0, 0, 0, 0.709);
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 2em;
-}
+    h1 {
+      font-size: 3em;
+      color: $primary-color;
+    }
 
-.features {
-  margin: 40px 0;
+    p {
+      font-size: 1.5em;
+      color: $secondary-color;
+    }
+  }
 
-}
+  .cta {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
 
-.features ul {
-  list-style-type: none;
-  padding: 0;
-}
+    .btn {
+      padding: 12px 30px;
+      background-color: $button-background !important;
+      color: $primary-color;
+      border: none;
+      font-size: 1.2em;
 
-.features li {
-  margin: 10px 0;
-  font-size: 1.2em;
-}
+      &:hover {
+        background-color: $button-hover-background !important;
+        color: $button-background;
+      }
+    }
+  }
 
-.cta {
-  margin-top: 30px;
-}
+  .features {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    margin: 0 auto;
 
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  margin: 5px;
-  background-color: #3498db;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
+    h2 {
+      color: #f7f7f7;
+      font-size: 2em;
+    }
 
-.btn:hover {
-  background-color: #2980b9;
+    .card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      .card {
+        background-color: $card-background;
+        border: $card-border;
+        border-radius: $card-radius;
+        box-shadow: $card-shadow;
+        padding: 20px;
+        width: calc(25% - 20px);
+        text-align: center;
+        @include transition(transform, 0.3s);
+        position: relative;
+
+        h3 {
+          color: $primary-color;
+          font-size: 1.5em;
+        }
+
+        p {
+          color: $secondary-color;
+          font-size: 1em;
+        }
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ribbon {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 35%;
+          height: 35%;
+          background-image: url('/assets/images/ruban.png');
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
+
+  // Flocons de neige et cadeaux
+  .snowflakes,
+  .gifts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: #fff;
+      font-size: 1.5em;
+      animation: fall 8s linear infinite;
+      opacity: 0.8;
+    }
+    .gift {
+      position: absolute;
+      top: -10px;
+      color: #fff;
+      font-size: 1.5em;
+      animation: fall-gift 10s linear infinite;
+      opacity: 0.8;
+    }
+
+    // Positions et animations spécifiques
+    @include generateSnowflakesAndGifts();
+  }
+
+  // Media Queries for responsiveness
+  @media (max-width: 1200px) {
+    .card {
+      width: calc(33.33% - 20px);
+    }
+  }
+
+  @media (max-width: 800px) {
+    .card {
+      width: calc(50% - 20px);
+    }
+
+    .header-section h1 {
+      font-size: 2.5em;
+    }
+
+    .header-section p {
+      font-size: 1.2em;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .card {
+      width: calc(100% - 20px);
+    }
+
+    .header-section h1 {
+      font-size: 2em;
+    }
+
+    .header-section p {
+      font-size: 1em;
+    }
+  }
 }
